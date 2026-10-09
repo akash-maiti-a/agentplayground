@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "arena-cyber-range"
+version = "0.1.0"
+description = "ARENA — a sandboxed, fully-abstract cyber-defense sparring range for AI agents (research/education)."
+readme = "README.md"
+requires-python = ">=3.11"
+# Intentionally ZERO runtime dependencies. The whole range runs on the Python
+# standard library so that 'no network imports' is trivially auditable and the
+# engine stays deterministic across machines.
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+arena = "arena.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["arena*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
