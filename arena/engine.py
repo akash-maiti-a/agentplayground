@@ -93,11 +93,16 @@ class Engine:
                 "verb": intent.verb, "reason": res.reason,
             })
             return None
-        out.events.append({
+        event = {
             "type": EventType.INTENT_ACCEPTED.value,
             "tick": self.w.tick, "side": side.value,
             "verb": intent.verb, "args": dict(intent.args),
-        })
+        }
+        if intent.rationale:
+            event["rationale"] = intent.rationale
+        if intent.claim:
+            event["claim"] = dict(intent.claim)
+        out.events.append(event)
         return intent
 
     def _log_res(self, out: TickOutcome, side: Side, verb: str, success: bool,

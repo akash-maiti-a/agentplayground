@@ -8,8 +8,8 @@ and standard deviation (never single-seed claims). It also records a version
 
 from __future__ import annotations
 
-import math
 import statistics
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from typing import Any, Callable
 
@@ -57,22 +57,35 @@ def run_batch(
     warden_factory: AgentFactory = lambda: RuleWarden(),
     *,
     limits: ResourceLimits | None = None,
-    sensor_coverage: float = 1.0,
+    sensor_coverage: float | None = None,
+    workers: int = 1,
 ) -> BatchReport:
-    cards: list[ScoreCard] = []
-    wins = {"warden": 0, "challenger": 0, "draw": 0}
-    for seed in seeds:
+    """Run one match per seed and aggregate. ``workers`` > 1 runs matches on a
+    thread pool (matches are independent); process/cluster-level parallelism is
+    intentionally left to an external orchestrator so this package imports
+    nothing that could spawn processes or reach the network."""
+
+    def _one(seed: int):
         result = run_match(
             scenario_id, seed, challenger_factory(), warden_factory(),
             limits=limits, sensor_coverage=sensor_coverage,
         )
-        card = score_match(result.log)
+        return result.winner, score_match(result.log)
+
+    cards: list[ScoreCard] = []
+    wins = {"warden": 0, "challenger": 0, "draw": 0}
+    if workers > 1:
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            results = list(pool.map(_one, seeds))
+    else:
+        results = [_one(s) for s in seeds]
+    for winner, card in results:
         cards.append(card)
-        wins[result.winner] = wins.get(result.winner, 0) + 1
+        wins[winner] = wins.get(winner, 0) + 1
 
     # aggregate the key axes across seeds
-    axes_warden = ["mttd_score", "mttc_score", "classification_f1", "availability",
-                   "containment_quality", "false_alarm_score", "recovery"]
+    axes_warden = ["mission_success", "mttd_score", "mttc_score", "classification_f1",
+                   "availability", "containment_quality", "false_alarm_score", "recovery"]
     axes_chal = ["objective_progress", "stealth", "efficiency"]
     aggregates: dict[str, dict[str, float]] = {}
     for k in axes_warden:
@@ -82,6 +95,8 @@ def run_batch(
     aggregates["warden.scalar"] = _agg([c.warden_scalar for c in cards])
     aggregates["challenger.scalar"] = _agg([c.challenger_scalar for c in cards])
     aggregates["integrity.rule_compliance"] = _agg([c.integrity.get("rule_compliance", 0.0) for c in cards])
+    aggregates["integrity.explanation_faithfulness"] = _agg(
+        [c.integrity.get("explanation_faithfulness", 1.0) for c in cards])
 
     n = max(1, len(seeds))
     win_rates = {k: round(v / n, 4) for k, v in wins.items()}

@@ -1,0 +1,33 @@
+name: arena-ci
+
+# The determinism gate and the zero-egress safety suite are the hard gates:
+# both are part of `pytest` and must pass on every push / PR.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install (dev)
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - name: Zero-egress safety gate
+        run: python -m pytest tests/test_safety.py -q
+      - name: Determinism gate
+        run: python -m pytest tests/test_determinism.py -q
+      - name: Full test suite
+        run: python -m pytest -q
+      - name: Smoke — benchmark leaderboard runs
+        run: python -m arena benchmark --workers 2

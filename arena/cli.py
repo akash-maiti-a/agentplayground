@@ -76,6 +76,48 @@ def _cmd_replay(args) -> int:
     return 0 if ok else 1
 
 
+def _cmd_train(args) -> int:
+    from .rl import train_warden, QWarden
+    train_seeds = _parse_seeds(args.train_seeds)
+    eval_seeds = _parse_seeds(args.eval_seeds)
+    learner = train_warden(args.scenario, episodes=args.episodes, seeds=train_seeds,
+                           epsilon=args.epsilon)
+
+    def winrate(make_warden):
+        w = av = 0.0
+        for s in eval_seeds:
+            r = run_match(args.scenario, s, RuleChallenger(), make_warden())
+            w += (r.winner == "warden"); av += r.availability_final
+        n = max(1, len(eval_seeds))
+        return round(w / n, 3), round(av / n, 3)
+
+    qw = winrate(lambda: QWarden(learner))
+    rw = winrate(lambda: RuleWarden())
+    print(json.dumps({
+        "scenario": args.scenario, "episodes": args.episodes,
+        "q_states": len(learner.q), "eval_seeds": len(eval_seeds),
+        "QWarden": {"warden_winrate": qw[0], "avg_final_availability": qw[1]},
+        "RuleWarden": {"warden_winrate": rw[0], "avg_final_availability": rw[1]},
+    }, indent=2))
+    return 0
+
+
+def _cmd_league(args) -> int:
+    from .league import run_league
+    rep = run_league(args.scenario, _parse_seeds(args.seeds), rounds=args.rounds)
+    print(json.dumps(rep.to_dict(), indent=2))
+    return 0
+
+
+def _cmd_benchmark(args) -> int:
+    from .benchmark import leaderboard, default_entries, STANDARD_SUITE
+    lb = leaderboard(default_entries(), workers=args.workers)
+    print(json.dumps({"ranking": lb["ranking"],
+                      "suite": {t: [min(s), max(s), len(s)] for t, s in STANDARD_SUITE.items()}},
+                     indent=2))
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="arena", description="ARENA cyber-defense sparring range")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -99,6 +141,24 @@ def main(argv: list[str] | None = None) -> int:
     prp = sub.add_parser("replay", help="verify and rescore a saved log")
     prp.add_argument("--log", required=True)
     prp.set_defaults(func=_cmd_replay)
+
+    pt = sub.add_parser("train", help="train a tabular-Q Warden and compare to the rule baseline")
+    pt.add_argument("--scenario", default="T1")
+    pt.add_argument("--episodes", type=int, default=150)
+    pt.add_argument("--epsilon", type=float, default=0.25)
+    pt.add_argument("--train-seeds", default="0-29")
+    pt.add_argument("--eval-seeds", default="100-119")
+    pt.set_defaults(func=_cmd_train)
+
+    pl = sub.add_parser("league", help="run a co-evolution league and report dynamics")
+    pl.add_argument("--scenario", default="T1")
+    pl.add_argument("--seeds", default="0-7")
+    pl.add_argument("--rounds", type=int, default=5)
+    pl.set_defaults(func=_cmd_league)
+
+    pbm = sub.add_parser("benchmark", help="run the standard benchmark leaderboard")
+    pbm.add_argument("--workers", type=int, default=1)
+    pbm.set_defaults(func=_cmd_benchmark)
 
     args = p.parse_args(argv)
     return args.func(args)

@@ -19,6 +19,9 @@ and where each is enforced.
 | 10 | **Human emergency stop** — one switch halts the match and records the reason | ✅ | `arena/control.py` (`emergency_stop`), `tests/test_safety.py` |
 | 11 | **Scope guard** — adding realism (real protocols/CVEs/executable components) requires governance sign-off | ☐ process | policy; keep `FORBIDDEN_IMPORTS` in the safety test as a tripwire |
 | 12 | **Incident register** — safety anomalies logged, triaged, fixed, regression-tested | ☐ process | add a regression test here for every safety-class incident |
+| 13 | **Adversarial scoring review** — degenerate strategies must not win the scalar | ✅ | `tests/test_reward_hacking.py` (rule Warden must beat `passive`/`isolate_all`/`declare_all`) |
+| 14 | **LLM backend stays inside the boundary** — the package ships only an offline backend; real models are injected and self-hosted | ✅ (in-repo) / ☐ (deploy) | `arena/agents/llm.py` (injected `Backend`); static import scan still green |
+| 15 | **Parallelism without new processes/egress** — batch parallelism uses threads only | ✅ | `arena/harness.py` (`ThreadPoolExecutor`); `multiprocessing`/`subprocess` remain in `FORBIDDEN_IMPORTS` |
 
 Legend: ✅ enforced in code/tests · ☐ deploy-time or process control (documented, to be owned operationally).
 

@@ -92,15 +92,18 @@ class RuleWarden:
             stale = (tick - self.last_investigated.get(nid, -999)) >= REINVESTIGATE_GAP
             if stale and afford("INVESTIGATE"):
                 self.last_investigated[nid] = tick
+                belief_conf = min(0.99, score / 2.0)
                 return self._i("INVESTIGATE", {"node": nid},
-                               f"investigate {nid} (suspicion {score:.2f})")
+                               f"investigate {nid} (suspicion {score:.2f})",
+                               claim={"node": nid, "belief": "compromised", "confidence": round(belief_conf, 3)})
 
         # 3) Declare a confidently-found node we have not declared yet.
         for nid, conf in self.confidence.items():
             if conf >= DECLARE_CONFIDENCE and nid not in self.declared and afford("DECLARE"):
                 self.declared.add(nid)
                 return self._i("DECLARE", {"node": nid, "verdict": "compromised"},
-                               f"declare {nid} compromised (confidence {conf:.2f})")
+                               f"declare {nid} compromised (confidence {conf:.2f})",
+                               claim={"node": nid, "belief": "compromised", "confidence": round(conf, 3)})
 
         # 4) Recover: restore an isolated node once things are quiet, to regain uptime.
         for nid in sorted(self.isolated):
@@ -135,5 +138,5 @@ class RuleWarden:
             w = _CATEGORY_WEIGHT.get(item.get("category", "unknown"), 0.3)
             self.suspicion[nid] = self.suspicion.get(nid, 0.0) + w * float(item.get("strength", 0.0)) + w * 0.4
 
-    def _i(self, verb: str, args: dict, why: str) -> Intent:
-        return Intent(side=Side.WARDEN, verb=verb, args=args, rationale=why)
+    def _i(self, verb: str, args: dict, why: str, claim: dict | None = None) -> Intent:
+        return Intent(side=Side.WARDEN, verb=verb, args=args, rationale=why, claim=claim or {})

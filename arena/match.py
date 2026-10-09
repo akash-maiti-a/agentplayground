@@ -23,7 +23,7 @@ from .engine import Engine
 from .log import MatchLog
 from .rng import DeterministicRNG
 from .schema import AP_COST, EventType, Intent, Side
-from .scenario import generate_world
+from .scenario import generate_world, tier_sensor_coverage
 from .world import Exposure, NodeStatus, World
 
 AP_START = 3
@@ -127,11 +127,13 @@ def run_match(
     *,
     limits: ResourceLimits | None = None,
     control: ControlPlane | None = None,
-    sensor_coverage: float = 1.0,
+    sensor_coverage: float | None = None,
     match_id: str | None = None,
 ) -> MatchResult:
     world = generate_world(scenario_id, seed)
     rng = DeterministicRNG(seed)
+    if sensor_coverage is None:
+        sensor_coverage = tier_sensor_coverage(scenario_id)
     engine = Engine(world, rng, sensor_coverage=sensor_coverage)
     control = control or ControlPlane(limits)
     mid = match_id or f"{scenario_id}-{seed}"

@@ -10,5 +10,13 @@ from .base import Agent
 from .challenger import RuleChallenger
 from .warden import RuleWarden
 from .scripted import ScriptedAgent
+from .llm import LLMAgent, DeterministicBackend
+from .baselines import (
+    PassiveWarden, IsolateAllWarden, DeclareAllWarden, NullChallenger,
+)
 
-__all__ = ["Agent", "RuleChallenger", "RuleWarden", "ScriptedAgent"]
+__all__ = [
+    "Agent", "RuleChallenger", "RuleWarden", "ScriptedAgent",
+    "LLMAgent", "DeterministicBackend",
+    "PassiveWarden", "IsolateAllWarden", "DeclareAllWarden", "NullChallenger",
+]

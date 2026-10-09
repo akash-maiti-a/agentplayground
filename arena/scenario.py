@@ -35,6 +35,7 @@ class TierSpec:
     posture_hi: float
     green_rate: float        # expected benign events per tick
     sla_floor: float
+    sensor_coverage: float = 1.0   # global detection multiplier (T3 lowers it)
 
 
 TIERS: dict[str, TierSpec] = {
@@ -47,7 +48,17 @@ TIERS: dict[str, TierSpec] = {
     # T2 — noisy enterprise: full topology, uneven telemetry, heavy noise.
     "T2": TierSpec("T2", ("perimeter", "commons", "core", "ops"), 6, 12,
                    0.3, 0.75, 0.3, 0.8, 2.5, 0.8),
+    # T3 — stealth & deception: low telemetry, heavy noise, reduced global
+    # sensor coverage (partial outages), so the Warden must lean on deception
+    # (decoys) and careful investigation rather than raw signal.
+    "T3": TierSpec("T3", ("perimeter", "commons", "core", "ops"), 6, 14,
+                   0.2, 0.55, 0.35, 0.85, 3.0, 0.8, sensor_coverage=0.6),
 }
+
+
+def tier_sensor_coverage(scenario_id: str) -> float:
+    spec = TIERS.get(scenario_id)
+    return spec.sensor_coverage if spec else 1.0
 
 # Fictional name pools (purely cosmetic labels).
 _PERIMETER = ["gate", "relay", "portalhost"]

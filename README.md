@@ -48,10 +48,19 @@ python -m arena run --scenario T1 --seed 4471
 python -m arena run --scenario T1 --seed 4471 --log match.jsonl --verbose
 
 # a batch across seeds, with per-metric mean/std and a version manifest
-python -m arena batch --scenario T1 --seeds 0-49
+python -m arena batch --scenario T1 --seeds 0-49 --workers 4
 
 # verify a saved log's hash chain and re-score it (post-hoc, from the log only)
 python -m arena replay --log match.jsonl
+
+# train a tabular-Q Warden and compare it to the rule baseline on held-out seeds
+python -m arena train --scenario T1 --episodes 150 --train-seeds 0-29 --eval-seeds 100-119
+
+# co-evolution league: Elo ratings + a stable/cycling/dominance verdict
+python -m arena league --scenario T1 --seeds 0-7 --rounds 5
+
+# the standard benchmark leaderboard (balanced vs degenerate baselines)
+python -m arena benchmark --workers 4
 ```
 
 ## Architecture (maps 1:1 to the plan)
@@ -66,9 +75,14 @@ python -m arena replay --log match.jsonl
 | Match loop, AP economy, observability | `arena/match.py` |
 | Append-only, content-hashed log | `arena/log.py` |
 | Post-hoc, multi-objective scoring | `arena/scoring.py` |
-| Evaluation harness (batch + variance) | `arena/harness.py` |
+| Evaluation harness (batch + variance, thread-parallel) | `arena/harness.py` |
 | Control plane (emergency stop, limits) | `arena/control.py` |
 | Deterministic RNG (named sub-streams) | `arena/rng.py` |
+| RL env (Gym-shaped) + tabular-Q Warden | `arena/rl.py` |
+| LLM-agent seam + offline deterministic backend | `arena/agents/llm.py` |
+| Degenerate baselines (reward-hacking tripwires) | `arena/agents/baselines.py` |
+| Co-evolution league (Elo + dynamics) | `arena/league.py` |
+| Reproducible benchmark + leaderboard | `arena/benchmark.py` |
 
 ```
  challenger ─intents▶ ┌───────────────┐ ◀intents─ warden
@@ -87,20 +101,64 @@ python -m arena replay --log match.jsonl
 * **T0 — tutorial:** tiny, highly observable, soft perimeter, little noise.
 * **T1 — segmented:** perimeter / commons / core, moderate telemetry + noise.
 * **T2 — noisy enterprise:** full topology, uneven telemetry, heavy green noise.
+* **T3 — stealth & deception:** low telemetry, heavy noise, reduced global
+  sensor coverage (partial outages) — the Warden must lean on deception
+  (decoys) and careful investigation rather than raw signal.
+* **T4 — co-evolution league:** not a single world but a *distribution* — see
+  `arena/league.py`, which plays populations of policies over repeated rounds.
 
 Each is a *seeded generator*; `scenario_id` fixes the distribution and `seed`
 fixes the draw. Every generated world is validated (objective reachable, SLA
 satisfiable, all nodes connected) before play.
 
+## Agents: rule-based, learned (RL), and LLM
+
+All three paradigms share the one narrow intent API (RQ4):
+
+* **Rule-based** (`agents/challenger.py`, `agents/warden.py`) — transparent
+  priority ladders; the interpretable baselines.
+* **RL** (`arena/rl.py`) — a Gymnasium-*shaped* `WardenEnv` (`reset`/`step`,
+  a fixed 6-way macro-action space, a 6-dim feature vector) with a tabular
+  Q-learner and a match-loop-compatible `QWarden`. Trains against a fixed
+  Challenger and generalises to held-out seeds.
+* **LLM** (`agents/llm.py`) — reasons in natural language over the same API via
+  an **injected backend** (`complete(prompt) -> str`). The only in-repo backend
+  is fully offline and deterministic, so the whole prompt→parse→validate path
+  is testable in the sandbox; a real self-hosted model is supplied by the
+  caller and lives outside this package (which is why the package still imports
+  nothing that can reach the network). Malformed replies fall back to a no-op
+  and are counted — nothing invalid ever reaches the engine.
+
+> **Training reward vs. evaluation score.** The RL env's per-tick reward uses
+> ground truth (the env *is* the simulator) — that is a training signal only.
+> The **evaluation** benchmark always uses the hidden, post-hoc, multi-objective
+> score in `arena/scoring.py`.
+
 ## Scoring (reward-hacking resistant by design)
 
 Scoring is **multi-objective, post-hoc, and ground-truth-referenced**. It
-reports a *vector* per side (MTTD/MTTC, classification F1, availability,
-containment quality, false-alarm rate, recovery / objective-progress, stealth,
-efficiency). The scalar "win" is only a transparent weighting of that vector
-and is **never fed back to agents mid-match** — so, e.g., a Warden that isolates
-everything is immediately punished on the availability and false-alarm axes and
-cannot dominate the scalar.
+reports a *vector* per side (mission-success, MTTD/MTTC, classification F1,
+availability, containment quality, false-alarm rate, recovery / objective-
+progress, stealth, efficiency) plus integrity axes (rule compliance and
+**explanation faithfulness** — the calibration of the Warden's stated beliefs
+against reconstructed ground truth, scored by Brier). The scalar "win" is only
+a transparent weighting of that vector and is **never fed back to agents
+mid-match**.
+
+The largest axis, **mission-success**, is SLA-gated: a defender earns it only
+by protecting the objective *while keeping services available*. This is what
+makes the scalar reward-hacking resistant, and it is enforced as a test
+(`tests/test_reward_hacking.py`): the balanced rule Warden must out-score every
+degenerate baseline (`passive`, `isolate_all`, `declare_all`). If a scoring
+change ever lets a degenerate strategy win, that test fails — the "adversarial
+scoring review" tripwire from the plan. Current leaderboard:
+
+```
+rule         scalar≈0.64  winrate≈0.86  f1≈0.46  avail≈0.95  faith≈0.93
+declare_all  scalar≈0.51  winrate≈0.31  f1≈0.74  avail≈1.00  faith≈0.13
+isolate_all  scalar≈0.35  winrate≈1.00  f1≈0.03  avail≈0.46  faith≈1.00
+passive      scalar≈0.33  winrate≈0.31  f1≈0.00  avail≈1.00  faith≈1.00
+```
 
 ## Tests
 
@@ -115,9 +173,20 @@ executed), **scenario invariants**, and **log tamper-evidence**.
 
 ## Status & roadmap
 
-Implemented: Phase 0 (foundations, safety harness, determinism gate) and the
-Phase 1 single-match MVP with rule-based agents, scenario generator, post-hoc
-scoring and a batch harness. Next (per the plan): RL/LLM agents behind the same
-intent API (Phase 2), the co-evolution league and parallel orchestration
-(Phase 3), and reward-hacking hardening + a public abstract-only benchmark
-(Phase 4). See `SAFETY.md` for the safety-requirements checklist.
+Implemented end-to-end:
+
+* **Phase 0** — foundations, safety harness, determinism gate.
+* **Phase 1** — single-match MVP: rule-based agents, scenario generator (T0–T2),
+  post-hoc scoring, batch harness.
+* **Phase 2** — RL env + tabular-Q Warden and an LLM-agent seam behind the same
+  intent API; T3 scenarios; real explanation-faithfulness scoring.
+* **Phase 3** — co-evolution league (Elo + stable/cycling/dominance verdict) and
+  thread-parallel batch orchestration (process/cluster parallelism is left to an
+  external orchestrator to keep the package import-clean).
+* **Phase 4** — reward-hacking hardening (mission-success axis + degenerate-
+  baseline tripwire tests) and a reproducible benchmark + leaderboard; CI runs
+  the determinism and zero-egress gates on every push.
+
+Where real frontier models would plug in: supply an `LLMAgent` backend that
+talks to a **self-hosted model inside the isolation boundary**. See `SAFETY.md`
+for the safety-requirements checklist.

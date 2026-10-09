@@ -89,6 +89,11 @@ class Intent:
     verb: str
     args: dict[str, Any] = field(default_factory=dict)
     rationale: str = ""
+    # Optional *structured belief* the agent asserts alongside the action, e.g.
+    #   {"node": "ledger-db", "belief": "compromised", "confidence": 0.8}
+    # It has no mechanical effect; it is scored for faithfulness against the
+    # ground truth reconstructed from the log (see arena.scoring).
+    claim: dict[str, Any] = field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         d = asdict(self)

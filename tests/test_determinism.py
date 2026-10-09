@@ -20,7 +20,7 @@ def _transcript(scenario: str, seed: int) -> list[str]:
     return [e["hash"] for e in res.log.events_of(EventType.STATE_HASH.value)]
 
 
-@pytest.mark.parametrize("scenario", ["T0", "T1", "T2"])
+@pytest.mark.parametrize("scenario", ["T0", "T1", "T2", "T3"])
 @pytest.mark.parametrize("seed", [0, 1, 4471, 99999])
 def test_match_transcript_is_deterministic(scenario, seed):
     a = _transcript(scenario, seed)
@@ -29,7 +29,7 @@ def test_match_transcript_is_deterministic(scenario, seed):
     assert a, "expected at least one tick"
 
 
-@pytest.mark.parametrize("scenario", ["T0", "T1", "T2"])
+@pytest.mark.parametrize("scenario", ["T0", "T1", "T2", "T3"])
 def test_world_generation_is_deterministic(scenario):
     w1 = generate_world(scenario, 123)
     w2 = generate_world(scenario, 123)
