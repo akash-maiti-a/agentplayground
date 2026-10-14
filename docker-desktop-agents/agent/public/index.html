@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Agent live view</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #111; color: #eee; margin: 0; padding: 1.5rem; }
+  h1 { font-size: 1.1rem; margin: 0 0 1rem; }
+  .meta { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; font-size: 0.9rem; color: #9ad; }
+  .meta b { color: #eee; }
+  img { max-width: 100%; border: 1px solid #333; border-radius: 6px; background: #000; }
+  pre { background: #1c1c1c; border: 1px solid #333; border-radius: 6px; padding: 0.75rem; white-space: pre-wrap; word-break: break-word; font-size: 0.85rem; }
+  .cols { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1.5rem; }
+  @media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
+  .stale { color: #f66; }
+</style>
+</head>
+<body>
+  <h1 id="title">Agent live view</h1>
+  <div class="meta" id="meta"></div>
+  <div class="cols">
+    <div><img id="shot" src="latest.png" alt="latest screenshot"></div>
+    <div>
+      <h2 style="font-size:0.95rem;">Model's raw reply</h2>
+      <pre id="reply">(waiting for first turn...)</pre>
+      <h2 style="font-size:0.95rem;">Parsed action</h2>
+      <pre id="action">-</pre>
+    </div>
+  </div>
+<script>
+async function refresh() {
+  try {
+    const res = await fetch('status.json?t=' + Date.now());
+    if (!res.ok) return;
+    const s = await res.json();
+    document.title = s.agent_name + ' — live view';
+    document.getElementById('title').textContent = s.agent_name + ' (' + s.model + ')';
+    document.getElementById('meta').innerHTML =
+      '<span><b>Task:</b> ' + escapeHtml(s.task) + '</span>' +
+      '<span><b>Turn:</b> ' + s.turn + ' / ' + s.max_turns + '</span>' +
+      '<span><b>Updated:</b> ' + s.updated_at + '</span>' +
+      (s.note ? '<span><b>Note:</b> ' + escapeHtml(s.note) + '</span>' : '');
+    document.getElementById('reply').textContent = s.model_reply || '(empty)';
+    document.getElementById('action').textContent = s.parsed_action ? JSON.stringify(s.parsed_action, null, 2) : '(none parsed)';
+  } catch (e) { /* status.json not written yet */ }
+  document.getElementById('shot').src = 'latest.png?t=' + Date.now();
+}
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+refresh();
+setInterval(refresh, 2000);
+</script>
+</body>
+</html>

@@ -2,8 +2,7 @@
 FROM dorowu/ubuntu-desktop-lxde-vnc:latest
 
 # Model baked in at build time: once pulled, the container needs zero
-# internet access at runtime, matching the compose file's `internal: true`
-# per-computer networks.
+# internet access at runtime — agent.py only ever calls its own 127.0.0.1.
 ARG OLLAMA_MODEL=moondream
 ENV OLLAMA_MODEL=${OLLAMA_MODEL}
 
@@ -37,9 +36,11 @@ RUN (ollama serve &) \
 
 WORKDIR /opt/agent
 COPY agent.py .
+COPY public ./public
 
 COPY supervisor-agent.conf /etc/supervisor/conf.d/agent.conf
 
 # Base image's own entrypoint starts Xvfb/x11vnc/noVNC/supervisord; our
-# ollama server and agent loop are just two more supervisor-managed
-# processes on top of that.
+# ollama server, agent loop, and the live-view HTTP server (port 7000:
+# latest screenshot + reasoning, see public/index.html) are three more
+# supervisor-managed processes on top of that.

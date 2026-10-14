@@ -9,18 +9,40 @@
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
   .card { background: #1c1c1c; border: 1px solid #333; border-radius: 8px; padding: 1rem; }
   .card h2 { margin: 0 0 0.5rem; font-size: 1rem; }
-  .card a { color: #6cf; }
+  .card a { color: #6cf; margin-right: 1rem; }
+  .card .sub { color: #888; font-size: 0.8rem; }
   code { color: #9f9; }
+  .tools { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #333; }
 </style>
 </head>
 <body>
   <h1>Docker desktop agents</h1>
   <p>Two "computers", two agent desktops each. Password for every VNC/noVNC session: <code>playground</code> (or your <code>VNC_PASSWORD</code>).</p>
   <div class="grid">
-    <div class="card"><h2>Computer 1 — Agent 1</h2><a href="http://localhost:6901/" target="_blank">localhost:6901</a></div>
-    <div class="card"><h2>Computer 1 — Agent 2</h2><a href="http://localhost:6902/" target="_blank">localhost:6902</a></div>
-    <div class="card"><h2>Computer 2 — Agent 1</h2><a href="http://localhost:6903/" target="_blank">localhost:6903</a></div>
-    <div class="card"><h2>Computer 2 — Agent 2</h2><a href="http://localhost:6904/" target="_blank">localhost:6904</a></div>
+    <div class="card">
+      <h2>Computer 1 — Agent 1</h2>
+      <a href="http://localhost:6901/" target="_blank">VNC desktop</a>
+      <a href="http://localhost:7901/" target="_blank">Live view</a>
+      <div class="sub">screenshot + model reasoning, no VNC login needed</div>
+    </div>
+    <div class="card">
+      <h2>Computer 1 — Agent 2</h2>
+      <a href="http://localhost:6902/" target="_blank">VNC desktop</a>
+      <a href="http://localhost:7902/" target="_blank">Live view</a>
+    </div>
+    <div class="card">
+      <h2>Computer 2 — Agent 1</h2>
+      <a href="http://localhost:6903/" target="_blank">VNC desktop</a>
+      <a href="http://localhost:7903/" target="_blank">Live view</a>
+    </div>
+    <div class="card">
+      <h2>Computer 2 — Agent 2</h2>
+      <a href="http://localhost:6904/" target="_blank">VNC desktop</a>
+      <a href="http://localhost:7904/" target="_blank">Live view</a>
+    </div>
+  </div>
+  <div class="tools">
+    <a href="http://localhost:9999/" target="_blank">Logs for every container (Dozzle)</a>
   </div>
 </body>
 </html>

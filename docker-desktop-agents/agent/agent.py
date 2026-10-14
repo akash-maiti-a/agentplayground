@@ -14,6 +14,8 @@ TURN_DELAY_SECONDS, WALL_CLOCK_LIMIT_SECONDS, plus the compose-level cpus/
 mem_limit on the container itself.
 """
 
+from __future__ import annotations  # the base image's python3 is 3.8; this enables `list[str]`/`X | None`
+
 import json
 import os
 import subprocess
@@ -21,6 +23,8 @@ import sys
 import time
 import urllib.error
 import urllib.request
+
+PUBLIC_DIR = "/opt/agent/public"
 
 DISPLAY = os.environ.get("DISPLAY", ":1")
 WIDTH = int(os.environ.get("DISPLAY_WIDTH", "1280"))
@@ -71,11 +75,37 @@ def run(cmd: list[str]) -> subprocess.CompletedProcess:
 
 def screenshot_b64() -> str:
     import base64
+    import shutil
 
     path = "/tmp/shot.png"
     run(["import", "-window", "root", path])
+    try:
+        shutil.copyfile(path, f"{PUBLIC_DIR}/latest.png")
+    except OSError:
+        pass  # observability is best-effort; never let it break the agent loop
     with open(path, "rb") as f:
         return base64.b64encode(f.read()).decode("ascii")
+
+
+def write_status(turn: int, reply: str, action: dict | None, note: str | None) -> None:
+    status = {
+        "agent_name": AGENT_NAME,
+        "model": OLLAMA_MODEL,
+        "task": TASK,
+        "turn": turn,
+        "max_turns": MAX_TURNS,
+        "model_reply": reply,
+        "parsed_action": action,
+        "note": note,
+        "updated_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+    }
+    try:
+        tmp = f"{PUBLIC_DIR}/status.json.tmp"
+        with open(tmp, "w") as f:
+            json.dump(status, f, indent=2)
+        os.replace(tmp, f"{PUBLIC_DIR}/status.json")
+    except OSError:
+        pass
 
 
 def xdotool(*args: str) -> None:
@@ -139,6 +169,15 @@ def execute_action(action: dict) -> str | None:
         return "done"
 
     return f"unsupported action: {kind!r}"
+
+
+def normalize_action(action: dict) -> None:
+    """Tolerate small local models' schema drift uniformly across all agents:
+    an alternate "type" key instead of "action", and mixed-case action names."""
+    if "action" not in action and "type" in action:
+        action["action"] = action.pop("type")
+    if isinstance(action.get("action"), str):
+        action["action"] = action["action"].lower()
 
 
 def extract_json(text: str) -> dict | None:
@@ -221,6 +260,7 @@ def main() -> None:
             reply = call_model("\n".join(history[-HISTORY_WINDOW:]), shot)
         except Exception as exc:  # local server hiccup, model crash, OOM, etc.
             log(f"Ollama call failed: {exc}; retrying in 5s")
+            write_status(turn, f"(Ollama call failed: {exc})", None, None)
             time.sleep(5)
             continue
 
@@ -228,12 +268,15 @@ def main() -> None:
         if action is None:
             log(f"turn {turn}: no parseable JSON in reply: {reply[:200]!r}")
             history.append(f"turn {turn}: invalid reply, no action taken")
+            write_status(turn, reply, None, "no parseable JSON")
             time.sleep(TURN_DELAY_SECONDS)
             continue
 
+        normalize_action(action)
         note = execute_action(action)
         log(f"turn {turn}: {action}" + (f" -> {note}" if note else ""))
         history.append(f"turn {turn}: {json.dumps(action)}")
+        write_status(turn, reply, action, note)
 
         if action.get("action") == "done":
             log("model signaled done.")

@@ -37,7 +37,8 @@ services:
       TASK: "${COMPUTER1_AGENT1_TASK:-${SHARED_TASK:-Open the text editor, type DONE, then stop.}}"
     networks: [computer1-net]
     ports:
-      - "6901:6901"   # noVNC web viewer -> http://localhost:6901/?password=$VNC_PASSWORD
+      - "6901:80"   # noVNC web viewer -> http://localhost:6901/?password=$VNC_PASSWORD
+      - "7901:7000" # live view: latest screenshot + model reasoning, no VNC needed
 
   computer1-agent2:
     <<: *agent-common
@@ -53,7 +54,8 @@ services:
       TASK: "${COMPUTER1_AGENT2_TASK:-${SHARED_TASK:-Open the text editor, type DONE, then stop.}}"
     networks: [computer1-net]
     ports:
-      - "6902:6901"
+      - "6902:80"
+      - "7902:7000"
 
   computer2-agent1:
     <<: *agent-common
@@ -69,7 +71,8 @@ services:
       TASK: "${COMPUTER2_AGENT1_TASK:-${SHARED_TASK:-Open the text editor, type DONE, then stop.}}"
     networks: [computer2-net]
     ports:
-      - "6903:6901"
+      - "6903:80"
+      - "7903:7000"
 
   computer2-agent2:
     <<: *agent-common
@@ -85,7 +88,8 @@ services:
       TASK: "${COMPUTER2_AGENT2_TASK:-${SHARED_TASK:-Open the text editor, type DONE, then stop.}}"
     networks: [computer2-net]
     ports:
-      - "6904:6901"
+      - "6904:80"
+      - "7904:7000"
 
   viewer:
     image: nginx:alpine
@@ -96,15 +100,29 @@ services:
       - "8080:80"
     networks: [computer1-net, computer2-net]
 
+  # Live, searchable logs for every container in the stack in one browser
+  # tab — stdout/stderr only (supervisord's own per-process logs, e.g.
+  # agent.py's reasoning, still need `docker exec ... cat /var/log/agent.log`
+  # or the per-agent live-view page on 7901-7904).
+  logs:
+    image: amir20/dozzle:latest
+    container_name: desktop-agents-logs
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      DOZZLE_NO_ANALYTICS: "true"
+    ports:
+      - "9999:8080"
+
 networks:
-  # Each "computer" is its own isolated, non-internet-routed network; the two
-  # agents on it can see each other but neither network can reach the
-  # internet. This was already true with the cloud-API version; it's now
-  # also sufficient on its own, since every agent's model is baked into its
-  # image at build time and there's no runtime API call to anywhere.
-  # noVNC viewing still works because published ports are inbound DNAT,
-  # which `internal: true` does not block.
-  computer1-net:
-    internal: true
-  computer2-net:
-    internal: true
+  # Each "computer" is its own network; the two agents on it can see each
+  # other but not the agents on the other "computer". This is plain bridge
+  # isolation, not `internal: true` — on this Docker Desktop setup,
+  # `internal: true` was found to also suppress inbound port publishing
+  # (noVNC never bound), not just outbound egress, which broke viewing.
+  # Isolation from the internet isn't load-bearing here regardless: every
+  # agent's model is baked into its image at build time and agent.py makes
+  # no runtime network call except to 127.0.0.1 (its own Ollama). Nothing in
+  # the stack initiates outbound traffic once it's up.
+  computer1-net: {}
+  computer2-net: {}
