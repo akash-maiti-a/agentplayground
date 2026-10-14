@@ -9,22 +9,28 @@
   .meta { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; font-size: 0.9rem; color: #9ad; }
   .meta b { color: #eee; }
   img { max-width: 100%; border: 1px solid #333; border-radius: 6px; background: #000; }
-  pre { background: #1c1c1c; border: 1px solid #333; border-radius: 6px; padding: 0.75rem; white-space: pre-wrap; word-break: break-word; font-size: 0.85rem; }
-  .cols { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1.5rem; }
+  pre { background: #1c1c1c; border: 1px solid #333; border-radius: 6px; padding: 0.75rem; white-space: pre-wrap; word-break: break-word; font-size: 0.85rem; max-height: 220px; overflow: auto; }
+  .cols { display: grid; grid-template-columns: 1.3fr 1fr; gap: 1.5rem; }
   @media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
-  .stale { color: #f66; }
+  h2 { font-size: 0.95rem; margin: 0.9rem 0 0.3rem; }
 </style>
 </head>
 <body>
   <h1 id="title">Agent live view</h1>
   <div class="meta" id="meta"></div>
   <div class="cols">
-    <div><img id="shot" src="latest.png" alt="latest screenshot"></div>
     <div>
-      <h2 style="font-size:0.95rem;">Model's raw reply</h2>
+      <img id="shot" src="latest.png" alt="latest screenshot">
+      <h2>Screen caption (what the vision model reported)</h2>
+      <pre id="caption">(waiting...)</pre>
+    </div>
+    <div>
+      <h2>Text model's raw reply</h2>
       <pre id="reply">(waiting for first turn...)</pre>
-      <h2 style="font-size:0.95rem;">Parsed action</h2>
+      <h2>Parsed action</h2>
       <pre id="action">-</pre>
+      <h2>Note / shell output</h2>
+      <pre id="note">-</pre>
     </div>
   </div>
 <script>
@@ -34,14 +40,16 @@ async function refresh() {
     if (!res.ok) return;
     const s = await res.json();
     document.title = s.agent_name + ' — live view';
-    document.getElementById('title').textContent = s.agent_name + ' (' + s.model + ')';
+    document.getElementById('title').textContent = s.agent_name + ' (vision: ' + s.vision_model + ', text: ' + s.text_model + ')';
     document.getElementById('meta').innerHTML =
       '<span><b>Task:</b> ' + escapeHtml(s.task) + '</span>' +
+      '<span><b>Targets:</b> ' + escapeHtml(s.targets || '(none)') + '</span>' +
       '<span><b>Turn:</b> ' + s.turn + ' / ' + s.max_turns + '</span>' +
-      '<span><b>Updated:</b> ' + s.updated_at + '</span>' +
-      (s.note ? '<span><b>Note:</b> ' + escapeHtml(s.note) + '</span>' : '');
+      '<span><b>Updated:</b> ' + s.updated_at + '</span>';
+    document.getElementById('caption').textContent = s.screen_caption || '(empty)';
     document.getElementById('reply').textContent = s.model_reply || '(empty)';
     document.getElementById('action').textContent = s.parsed_action ? JSON.stringify(s.parsed_action, null, 2) : '(none parsed)';
+    document.getElementById('note').textContent = s.note || '-';
   } catch (e) { /* status.json not written yet */ }
   document.getElementById('shot').src = 'latest.png?t=' + Date.now();
 }
