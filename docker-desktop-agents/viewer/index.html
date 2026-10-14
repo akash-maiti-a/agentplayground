@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Desktop Agents</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #111; color: #eee; margin: 0; padding: 2rem; }
+  h1 { font-size: 1.25rem; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+  .card { background: #1c1c1c; border: 1px solid #333; border-radius: 8px; padding: 1rem; }
+  .card h2 { margin: 0 0 0.5rem; font-size: 1rem; }
+  .card a { color: #6cf; }
+  code { color: #9f9; }
+</style>
+</head>
+<body>
+  <h1>Docker desktop agents</h1>
+  <p>Two "computers", two agent desktops each. Password for every VNC/noVNC session: <code>playground</code> (or your <code>VNC_PASSWORD</code>).</p>
+  <div class="grid">
+    <div class="card"><h2>Computer 1 — Agent 1</h2><a href="http://localhost:6901/" target="_blank">localhost:6901</a></div>
+    <div class="card"><h2>Computer 1 — Agent 2</h2><a href="http://localhost:6902/" target="_blank">localhost:6902</a></div>
+    <div class="card"><h2>Computer 2 — Agent 1</h2><a href="http://localhost:6903/" target="_blank">localhost:6903</a></div>
+    <div class="card"><h2>Computer 2 — Agent 2</h2><a href="http://localhost:6904/" target="_blank">localhost:6904</a></div>
+  </div>
+</body>
+</html>

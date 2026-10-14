@@ -1,0 +1,110 @@
+x-agent-common: &agent-common
+  shm_size: "1gb"
+  restart: unless-stopped
+  # Identical resource caps on every agent container — the one knob most
+  # likely to quietly tilt a "fair" comparison between local models if left
+  # to vary. Raise/lower together, never per-agent, unless that's the thing
+  # you're deliberately testing.
+  cpus: "${AGENT_CPUS:-2.0}"
+  mem_limit: "${AGENT_MEM_LIMIT:-4g}"
+
+x-common-env: &common-env
+  RESOLUTION: "1280x800x24"
+  DISPLAY_WIDTH: "1280"
+  DISPLAY_HEIGHT: "800"
+  VNC_PASSWORD: "${VNC_PASSWORD:-playground}"
+  # Decoding + budget knobs kept identical across agents by default so any
+  # difference in outcome traces back to the model, not the harness.
+  OLLAMA_TEMPERATURE: "${OLLAMA_TEMPERATURE:-0.2}"
+  OLLAMA_SEED: "${OLLAMA_SEED:-42}"
+  OLLAMA_NUM_PREDICT: "${OLLAMA_NUM_PREDICT:-256}"
+  MAX_TURNS: "${MAX_TURNS:-200}"
+  TURN_DELAY_SECONDS: "${TURN_DELAY_SECONDS:-1.0}"
+  WALL_CLOCK_LIMIT_SECONDS: "${WALL_CLOCK_LIMIT_SECONDS:-1800}"
+
+services:
+  computer1-agent1:
+    <<: *agent-common
+    container_name: computer1-agent1
+    build:
+      context: ./agent
+      args:
+        OLLAMA_MODEL: "${COMPUTER1_AGENT1_MODEL:-moondream}"
+    environment:
+      <<: *common-env
+      AGENT_NAME: "computer1-agent1"
+      OLLAMA_MODEL: "${COMPUTER1_AGENT1_MODEL:-moondream}"
+      TASK: "${COMPUTER1_AGENT1_TASK:-${SHARED_TASK:-Open the text editor, type DONE, then stop.}}"
+    networks: [computer1-net]
+    ports:
+      - "6901:6901"   # noVNC web viewer -> http://localhost:6901/?password=$VNC_PASSWORD
+
+  computer1-agent2:
+    <<: *agent-common
+    container_name: computer1-agent2
+    build:
+      context: ./agent
+      args:
+        OLLAMA_MODEL: "${COMPUTER1_AGENT2_MODEL:-moondream}"
+    environment:
+      <<: *common-env
+      AGENT_NAME: "computer1-agent2"
+      OLLAMA_MODEL: "${COMPUTER1_AGENT2_MODEL:-moondream}"
+      TASK: "${COMPUTER1_AGENT2_TASK:-${SHARED_TASK:-Open the text editor, type DONE, then stop.}}"
+    networks: [computer1-net]
+    ports:
+      - "6902:6901"
+
+  computer2-agent1:
+    <<: *agent-common
+    container_name: computer2-agent1
+    build:
+      context: ./agent
+      args:
+        OLLAMA_MODEL: "${COMPUTER2_AGENT1_MODEL:-moondream}"
+    environment:
+      <<: *common-env
+      AGENT_NAME: "computer2-agent1"
+      OLLAMA_MODEL: "${COMPUTER2_AGENT1_MODEL:-moondream}"
+      TASK: "${COMPUTER2_AGENT1_TASK:-${SHARED_TASK:-Open the text editor, type DONE, then stop.}}"
+    networks: [computer2-net]
+    ports:
+      - "6903:6901"
+
+  computer2-agent2:
+    <<: *agent-common
+    container_name: computer2-agent2
+    build:
+      context: ./agent
+      args:
+        OLLAMA_MODEL: "${COMPUTER2_AGENT2_MODEL:-moondream}"
+    environment:
+      <<: *common-env
+      AGENT_NAME: "computer2-agent2"
+      OLLAMA_MODEL: "${COMPUTER2_AGENT2_MODEL:-moondream}"
+      TASK: "${COMPUTER2_AGENT2_TASK:-${SHARED_TASK:-Open the text editor, type DONE, then stop.}}"
+    networks: [computer2-net]
+    ports:
+      - "6904:6901"
+
+  viewer:
+    image: nginx:alpine
+    container_name: desktop-agents-viewer
+    volumes:
+      - ./viewer/index.html:/usr/share/nginx/html/index.html:ro
+    ports:
+      - "8080:80"
+    networks: [computer1-net, computer2-net]
+
+networks:
+  # Each "computer" is its own isolated, non-internet-routed network; the two
+  # agents on it can see each other but neither network can reach the
+  # internet. This was already true with the cloud-API version; it's now
+  # also sufficient on its own, since every agent's model is baked into its
+  # image at build time and there's no runtime API call to anywhere.
+  # noVNC viewing still works because published ports are inbound DNAT,
+  # which `internal: true` does not block.
+  computer1-net:
+    internal: true
+  computer2-net:
+    internal: true

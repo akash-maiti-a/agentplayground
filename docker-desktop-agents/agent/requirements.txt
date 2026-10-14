@@ -1,0 +1,2 @@
+# agent.py only uses the standard library (urllib, json, subprocess) so that
+# the image stays small and there's nothing extra to pip-install here.
