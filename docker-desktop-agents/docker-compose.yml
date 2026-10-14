@@ -140,7 +140,11 @@ services:
     environment:
       DOZZLE_NO_ANALYTICS: "true"
     ports:
-      - "9999:8080"
+      # 9999 collided with a Windows/Hyper-V dynamic port exclusion range
+      # that shifted after a WSL restart (`netsh interface ipv4 show
+      # excludedportrange protocol=tcp`) — moved to 9100, which isn't in any
+      # current exclusion range.
+      - "9100:8080"
 
 networks:
   # Each "computer" is its own network for the noVNC/viewer grouping, but
