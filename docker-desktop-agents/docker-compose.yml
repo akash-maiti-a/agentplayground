@@ -77,8 +77,14 @@ services:
       - "6902:80"
       - "7902:7000"
 
+  # computer2's two agents are behind the "full" Compose profile: they don't
+  # start on a plain `docker compose up` (default = computer1's 2 agents
+  # only, ~half the RAM/CPU). Bring up the full 4-agent adversarial lab with
+  # `docker compose --profile full up --build` — see RUNTIME_GUIDE.md
+  # "Scaling: 2 agents vs. the full 4-agent lab".
   computer2-agent1:
     <<: *agent-common
+    profiles: ["full"]
     container_name: computer2-agent1
     build:
       context: ./agent
@@ -101,6 +107,7 @@ services:
 
   computer2-agent2:
     <<: *agent-common
+    profiles: ["full"]
     container_name: computer2-agent2
     build:
       context: ./agent

@@ -149,6 +149,17 @@ def write_status(turn: int, caption: str, reply: str, action: dict | None, note:
         os.replace(tmp, f"{PUBLIC_DIR}/status.json")
     except OSError:
         pass
+    append_turn(status)
+
+
+def append_turn(status: dict) -> None:
+    """Durable per-turn history (status.json only ever holds the latest turn) —
+    the live-view page reads this to show every turn, not just the last one."""
+    try:
+        with open(f"{PUBLIC_DIR}/turns.jsonl", "a") as f:
+            f.write(json.dumps(status) + "\n")
+    except OSError:
+        pass
 
 
 def xdotool(*args: str) -> None:
@@ -328,6 +339,11 @@ def main() -> None:
 
     log(f"starting task: {TASK!r} on display {DISPLAY}; targets={TARGETS!r}")
 
+    try:  # fresh history each process start (supervisord may restart this program)
+        open(f"{PUBLIC_DIR}/turns.jsonl", "w").close()
+    except OSError:
+        pass
+
     history: list[str] = []
     start_time = time.time()
 
@@ -344,7 +360,7 @@ def main() -> None:
             caption = ""
 
         try:
-            reply = decide_action("\n".join(history[-HISTORY_WINDOW:]), caption)
+            reply = decide_action(caption, "\n".join(history[-HISTORY_WINDOW:]))
         except Exception as exc:  # local server hiccup, model crash, OOM, etc.
             log(f"Ollama call failed: {exc}; retrying in 5s")
             write_status(turn, caption, f"(Ollama call failed: {exc})", None, None)

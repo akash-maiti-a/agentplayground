@@ -2,60 +2,230 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Agent live view</title>
 <style>
-  body { font-family: system-ui, sans-serif; background: #111; color: #eee; margin: 0; padding: 1.5rem; }
-  h1 { font-size: 1.1rem; margin: 0 0 1rem; }
-  .meta { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; font-size: 0.9rem; color: #9ad; }
-  .meta b { color: #eee; }
-  img { max-width: 100%; border: 1px solid #333; border-radius: 6px; background: #000; }
-  pre { background: #1c1c1c; border: 1px solid #333; border-radius: 6px; padding: 0.75rem; white-space: pre-wrap; word-break: break-word; font-size: 0.85rem; max-height: 220px; overflow: auto; }
-  .cols { display: grid; grid-template-columns: 1.3fr 1fr; gap: 1.5rem; }
-  @media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
-  h2 { font-size: 0.95rem; margin: 0.9rem 0 0.3rem; }
+  :root {
+    --bg: #0d1117;
+    --panel: #161b22;
+    --border: #2a313c;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --ok: #3fb950;
+    --warn: #d29922;
+    --bad: #f85149;
+    --shell: #a371f7;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+    background: var(--bg); color: var(--text);
+    margin: 0; padding: 0 0 2rem;
+  }
+  header {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--panel); border-bottom: 1px solid var(--border);
+    padding: 0.9rem 1.5rem;
+  }
+  h1 { font-size: 1.05rem; margin: 0 0 0.5rem; font-weight: 600; }
+  h1 .model { color: var(--accent); font-weight: 400; }
+  .meta { display: flex; gap: 1.25rem; flex-wrap: wrap; font-size: 0.82rem; color: var(--muted); }
+  .meta b { color: var(--text); font-weight: 600; }
+  .progress { height: 4px; background: var(--border); border-radius: 2px; margin-top: 0.6rem; overflow: hidden; }
+  .progress-bar { height: 100%; background: var(--accent); transition: width 0.3s; }
+
+  main { max-width: 1200px; margin: 0 auto; padding: 1.25rem 1.5rem 0; }
+  .layout { display: grid; grid-template-columns: 360px 1fr; gap: 1.5rem; align-items: start; }
+  @media (max-width: 950px) { .layout { grid-template-columns: 1fr; } }
+
+  .shot-panel { position: sticky; top: 90px; }
+  img { max-width: 100%; border: 1px solid var(--border); border-radius: 8px; background: #000; display: block; }
+  .shot-caption { font-size: 0.78rem; color: var(--muted); margin-top: 0.5rem; }
+
+  h2 { font-size: 0.78rem; margin: 0 0 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+
+  .turns { display: flex; flex-direction: column; gap: 0.75rem; }
+  .turn {
+    background: var(--panel); border: 1px solid var(--border); border-radius: 8px;
+    padding: 0.85rem 1rem;
+  }
+  .turn.latest { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .turn-head {
+    display: flex; align-items: center; gap: 0.6rem; cursor: pointer; user-select: none;
+    font-size: 0.85rem;
+  }
+  .turn-num { color: var(--muted); font-variant-numeric: tabular-nums; width: 3.2rem; flex-shrink: 0; }
+  .badge {
+    font-size: 0.72rem; font-weight: 600; padding: 0.12rem 0.55rem; border-radius: 999px;
+    background: #30363d; color: var(--text); white-space: nowrap;
+  }
+  .badge.run_shell { background: rgba(163,113,247,0.18); color: var(--shell); }
+  .badge.done { background: rgba(63,185,80,0.18); color: var(--ok); }
+  .badge.error { background: rgba(248,81,73,0.18); color: var(--bad); }
+  .badge.gui { background: rgba(88,166,255,0.18); color: var(--accent); }
+  .turn-summary { flex: 1; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.82rem; }
+  .turn-time { color: var(--muted); font-size: 0.75rem; flex-shrink: 0; }
+  .chevron { color: var(--muted); font-size: 0.7rem; transition: transform 0.15s; flex-shrink: 0; }
+  .turn.open .chevron { transform: rotate(90deg); }
+
+  .turn-body { display: none; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border); }
+  .turn.open .turn-body { display: block; }
+  .field { margin-bottom: 0.7rem; }
+  .field:last-child { margin-bottom: 0; }
+  .field-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 0.3rem; }
+  pre {
+    background: #0a0e14; border: 1px solid var(--border); border-radius: 6px;
+    padding: 0.6rem 0.75rem; white-space: pre-wrap; word-break: break-word;
+    font-size: 0.8rem; line-height: 1.45; max-height: 280px; overflow: auto; margin: 0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  .controls { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.9rem; font-size: 0.82rem; color: var(--muted); }
+  .controls button {
+    background: var(--panel); border: 1px solid var(--border); color: var(--text);
+    padding: 0.3rem 0.7rem; border-radius: 6px; font-size: 0.78rem; cursor: pointer;
+  }
+  .controls button:hover { border-color: var(--accent); }
+  .empty { color: var(--muted); font-size: 0.85rem; padding: 2rem 0; text-align: center; }
 </style>
 </head>
 <body>
-  <h1 id="title">Agent live view</h1>
-  <div class="meta" id="meta"></div>
-  <div class="cols">
-    <div>
-      <img id="shot" src="latest.png" alt="latest screenshot">
-      <h2>Screen caption (what the vision model reported)</h2>
-      <pre id="caption">(waiting...)</pre>
+  <header>
+    <h1 id="title">Agent live view</h1>
+    <div class="meta" id="meta"></div>
+    <div class="progress"><div class="progress-bar" id="progress-bar" style="width:0%"></div></div>
+  </header>
+  <main>
+    <div class="layout">
+      <div class="shot-panel">
+        <h2>Latest screen</h2>
+        <img id="shot" src="latest.png" alt="latest screenshot">
+        <div class="shot-caption" id="shot-caption"></div>
+      </div>
+      <div>
+        <div class="controls">
+          <span id="turn-count">0 turns</span>
+          <button id="toggle-newest">Newest first</button>
+          <button id="expand-all">Expand all</button>
+          <button id="collapse-all">Collapse all</button>
+        </div>
+        <div class="turns" id="turns"><div class="empty">Waiting for the first turn...</div></div>
+      </div>
     </div>
-    <div>
-      <h2>Text model's raw reply</h2>
-      <pre id="reply">(waiting for first turn...)</pre>
-      <h2>Parsed action</h2>
-      <pre id="action">-</pre>
-      <h2>Note / shell output</h2>
-      <pre id="note">-</pre>
-    </div>
-  </div>
+  </main>
 <script>
-async function refresh() {
+let newestFirst = true;
+let openTurns = new Set();
+let lastRenderedCount = 0;
+
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function badgeFor(action, note) {
+  if (!action) return '<span class="badge error">no action</span>';
+  const kind = (action.action || '?');
+  if (kind === 'run_shell') return '<span class="badge run_shell">run_shell</span>';
+  if (kind === 'done') return '<span class="badge done">done</span>';
+  if ((note || '').startsWith('unsupported') || (note || '').toLowerCase().includes('fail')) {
+    return '<span class="badge error">' + escapeHtml(kind) + '</span>';
+  }
+  return '<span class="badge gui">' + escapeHtml(kind) + '</span>';
+}
+
+function summaryFor(s) {
+  if (!s.parsed_action) return s.note || '(no parseable action)';
+  if (s.parsed_action.action === 'run_shell') return s.parsed_action.command || '';
+  if (s.parsed_action.action === 'type') return 'type: ' + (s.parsed_action.text || '');
+  return JSON.stringify(s.parsed_action);
+}
+
+function renderTurn(s, isLatest) {
+  const key = String(s.turn);
+  const isOpen = isLatest || openTurns.has(key);
+  const div = document.createElement('div');
+  div.className = 'turn' + (isLatest ? ' latest' : '') + (isOpen ? ' open' : '');
+  div.dataset.turn = key;
+  div.innerHTML =
+    '<div class="turn-head">' +
+      '<span class="chevron">&#9656;</span>' +
+      '<span class="turn-num">#' + s.turn + '</span>' +
+      badgeFor(s.parsed_action, s.note) +
+      '<span class="turn-summary">' + escapeHtml(summaryFor(s)) + '</span>' +
+      '<span class="turn-time">' + escapeHtml(s.updated_at || '') + '</span>' +
+    '</div>' +
+    '<div class="turn-body">' +
+      (s.screen_caption ? '<div class="field"><div class="field-label">Screen caption</div><pre>' + escapeHtml(s.screen_caption) + '</pre></div>' : '') +
+      '<div class="field"><div class="field-label">Model reply</div><pre>' + escapeHtml(s.model_reply || '(empty)') + '</pre></div>' +
+      '<div class="field"><div class="field-label">Parsed action</div><pre>' + escapeHtml(s.parsed_action ? JSON.stringify(s.parsed_action, null, 2) : '(none parsed)') + '</pre></div>' +
+      (s.note ? '<div class="field"><div class="field-label">Note / shell output</div><pre>' + escapeHtml(s.note) + '</pre></div>' : '') +
+    '</div>';
+  div.querySelector('.turn-head').addEventListener('click', () => {
+    div.classList.toggle('open');
+    if (div.classList.contains('open')) openTurns.add(key); else openTurns.delete(key);
+  });
+  return div;
+}
+
+async function refreshStatus() {
   try {
     const res = await fetch('status.json?t=' + Date.now());
     if (!res.ok) return;
     const s = await res.json();
     document.title = s.agent_name + ' — live view';
-    document.getElementById('title').textContent = s.agent_name + ' (vision: ' + s.vision_model + ', text: ' + s.text_model + ')';
+    document.getElementById('title').innerHTML =
+      escapeHtml(s.agent_name) + ' <span class="model">(' +
+      (s.vision_model ? escapeHtml(s.vision_model) + ' + ' : '') + escapeHtml(s.text_model) + ')</span>';
     document.getElementById('meta').innerHTML =
       '<span><b>Task:</b> ' + escapeHtml(s.task) + '</span>' +
       '<span><b>Targets:</b> ' + escapeHtml(s.targets || '(none)') + '</span>' +
       '<span><b>Turn:</b> ' + s.turn + ' / ' + s.max_turns + '</span>' +
-      '<span><b>Updated:</b> ' + s.updated_at + '</span>';
-    document.getElementById('caption').textContent = s.screen_caption || '(empty)';
-    document.getElementById('reply').textContent = s.model_reply || '(empty)';
-    document.getElementById('action').textContent = s.parsed_action ? JSON.stringify(s.parsed_action, null, 2) : '(none parsed)';
-    document.getElementById('note').textContent = s.note || '-';
+      '<span><b>Updated:</b> ' + escapeHtml(s.updated_at) + '</span>';
+    document.getElementById('progress-bar').style.width = Math.min(100, (s.turn / s.max_turns) * 100) + '%';
+    document.getElementById('shot-caption').textContent = s.screen_caption ? s.screen_caption.slice(0, 140) : '';
   } catch (e) { /* status.json not written yet */ }
   document.getElementById('shot').src = 'latest.png?t=' + Date.now();
 }
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+async function refreshTurns() {
+  try {
+    const res = await fetch('turns.jsonl?t=' + Date.now());
+    if (!res.ok) return;
+    const text = await res.text();
+    const lines = text.split('\n').filter(Boolean);
+    if (lines.length === lastRenderedCount) return; // nothing new, skip re-render
+    lastRenderedCount = lines.length;
+    const records = lines.map(l => { try { return JSON.parse(l); } catch { return null; } }).filter(Boolean);
+    document.getElementById('turn-count').textContent = records.length + ' turn' + (records.length === 1 ? '' : 's');
+    const container = document.getElementById('turns');
+    container.innerHTML = '';
+    if (records.length === 0) {
+      container.innerHTML = '<div class="empty">Waiting for the first turn...</div>';
+      return;
+    }
+    const ordered = newestFirst ? [...records].reverse() : records;
+    ordered.forEach((s, i) => {
+      const isLatest = newestFirst ? i === 0 : i === ordered.length - 1;
+      container.appendChild(renderTurn(s, isLatest));
+    });
+  } catch (e) { /* turns.jsonl not written yet */ }
 }
+
+document.getElementById('toggle-newest').addEventListener('click', (e) => {
+  newestFirst = !newestFirst;
+  e.target.textContent = newestFirst ? 'Newest first' : 'Oldest first';
+  lastRenderedCount = -1; // force re-render
+  refreshTurns();
+});
+document.getElementById('expand-all').addEventListener('click', () => {
+  document.querySelectorAll('.turn').forEach(t => { t.classList.add('open'); openTurns.add(t.dataset.turn); });
+});
+document.getElementById('collapse-all').addEventListener('click', () => {
+  document.querySelectorAll('.turn').forEach(t => { t.classList.remove('open'); openTurns.delete(t.dataset.turn); });
+});
+
+function refresh() { refreshStatus(); refreshTurns(); }
 refresh();
 setInterval(refresh, 2000);
 </script>
