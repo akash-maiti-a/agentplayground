@@ -184,12 +184,37 @@ All six services should show `running`/`healthy`. Then open
 **http://localhost:8080** for the full link list to every desktop, live
 view, and Dozzle.
 
+## Scaling: 2 agents vs. the full 4-agent lab
+
+By default (`docker compose up --build`, no flags) only `computer1-agent1`
+and `computer1-agent2` start — `computer2-agent1`/`computer2-agent2` sit
+behind Compose's `full` profile and are skipped. This is the mode to use on
+constrained hardware, or when you just want to smoke-test one model without
+the adversarial back-and-forth.
+
+| | Default (2 agents) | `--profile full` (4 agents) |
+| --- | --- | --- |
+| Command | `docker compose up --build` | `docker compose --profile full up --build` |
+| Containers | `computer1-agent1`, `computer1-agent2`, `viewer`, `logs` | adds `computer2-agent1`, `computer2-agent2` |
+| Typical VM/host budget | ~6 cores, ~12–16GB free (two 7B-class models × 2 containers) | ~12 cores, ~24GB free (the README's original hardware note) |
+| Adversarial task | `computer1`'s agents still target `computer2-agent1,computer2-agent2` by hostname — those hosts don't exist in this mode, so recon (`nmap`/`ssh`) simply finds nothing to reach; this is expected, not a bug | Both "computers" are reachable — the seeded weak SSH credential is actually findable |
+| Use it for | Comparing a single model pair's behavior, or any machine where the full lab previously caused Docker/WSL to thrash | Head-to-head model comparisons, or the adversarial access scenario as originally designed |
+
+`--profile full` must be passed to every compose command that should see
+those two services (`up`, `down`, `ps`, `logs`, …) — a plain `docker compose
+down` while they're running will leave them up, since compose only tears
+down what the current invocation's profile selects. Stop them explicitly if
+that happens: `docker rm -f computer2-agent1 computer2-agent2`.
+
+`COMPUTER2_AGENT1_*` / `COMPUTER2_AGENT2_*` vars in `.env` are only read when
+`--profile full` is used.
+
 ## docker-desktop-agents: observing the lab
 
 | Tool | URL | What it shows |
 | --- | --- | --- |
 | Link hub | http://localhost:8080 | Nginx page linking every desktop, live view, and Dozzle |
-| Dozzle (aggregated logs) | http://localhost:9999 | Live, searchable logs from all 5 containers in one tab, including each agent's own reasoning (`agent.py` logs to stdout) |
+| Dozzle (aggregated logs) | http://localhost:9100 | Live, searchable logs from all containers in one tab, including each agent's own reasoning (`agent.py` logs to stdout) — moved from the default 9999 on this machine due to a Windows port-exclusion collision, see Troubleshooting |
 | Live view (no VNC needed) | http://localhost:7901–7904 | Per-agent: latest screenshot, the vision model's caption, the text model's raw reply, the parsed action, and shell output — refreshes every 2s |
 | noVNC desktop | http://localhost:6901–6904?password=$VNC_PASSWORD | The actual Linux desktop — watch, or take over manually |
 
@@ -254,3 +279,5 @@ keeps rebuilds fast.
 | Comparison feels unfair between models | A fairness knob was changed per-agent instead of globally | Re-check `.env`: `AGENT_CPUS`, `AGENT_MEM_LIMIT`, `OLLAMA_TEMPERATURE/SEED/NUM_PREDICT`, `MAX_TURNS`, `TURN_DELAY_SECONDS` should be identical across all four agents unless that's the deliberate variable |
 | Want to inspect a single run after the fact | — | ARENA: `python -m arena replay --log match.jsonl`. docker-desktop-agents: `docker exec <container> cat /opt/agent/public/status.json` or `docker compose logs <container>` |
 | `error during connect: Get "http://%2F%2F.%2Fpipe%2FdockerDesktopLinuxEngine/...": open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.` | Docker Desktop's background engine isn't running — the named pipe the CLI talks to doesn't exist yet. This happens when the Docker Desktop **app** (tray icon) isn't open, is still starting up, or crashed/was reset, even though the `docker`/`docker compose` CLI is installed. | Start the Docker Desktop app (Start menu → "Docker Desktop", or `Start-Process "C:\Program Files\Docker\Docker\Docker Desktop.exe"`) and wait for its tray icon to show the engine as running (whale icon steady, not animating) before retrying `docker compose up`. If it won't start: check `sc query com.docker.service` for the service state, try "Restart" from the Docker Desktop tray menu, or reboot if the service is stuck. |
+| Models keep timing out (`Ollama call failed: timed out; retrying in 5s`), Docker Desktop itself crashed/closed | The WSL2 VM backing Docker ran out of memory and is thrashing on swap — check with `wsl -d docker-desktop free -h`; if `available` is near zero and swap is nearly full, the VM is wedged, not just slow | `wsl --shutdown` (frees the VM's memory immediately), then relaunch Docker Desktop and wait for the engine to come up before `docker compose up`. Then use the default 2-agent profile instead of `--profile full` (see "Scaling" above) — running all 4 agents is exactly what causes this on machines without ~24GB free for the VM |
+| `docker compose down`/`up` fails with `Ports are not available: ... bind: An attempt was made to access a socket in a way forbidden by its access permissions` on a specific port | A Windows/Hyper-V dynamic port exclusion range shifted (common right after `wsl --shutdown` or a reboot) and now covers that port | Check `netsh interface ipv4 show excludedportrange protocol=tcp`; if the port falls in a listed range, remap that service to an unused port in `docker-compose.yml` (or restart the `winnat` service as admin, which reinitializes the exclusions, but that needs elevation) |
