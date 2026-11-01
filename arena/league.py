@@ -70,6 +70,22 @@ def default_pools() -> tuple[dict[str, AgentFactory], dict[str, AgentFactory]]:
     return wardens, challengers
 
 
+def extended_pools(q_learners: dict[str, Any] | None = None
+                   ) -> tuple[dict[str, AgentFactory], dict[str, AgentFactory]]:
+    """The default pools plus the v2 agents: AdaptiveWarden, any supplied
+    trained Q-Wardens, and a second Challenger (StealthChallenger) so the
+    league has more than one opponent and its dynamics mean something."""
+    from .agents import AdaptiveWarden, StealthChallenger
+    wardens, challengers = default_pools()
+    wardens["adaptive"] = lambda: AdaptiveWarden()
+    if q_learners:
+        from .rl import QWarden
+        for name, learner in q_learners.items():
+            wardens[name] = (lambda L=learner: QWarden(L))
+    challengers["stealth"] = lambda: StealthChallenger()
+    return wardens, challengers
+
+
 def _rank_order(ratings: dict[str, float]) -> list[str]:
     return [k for k, _ in sorted(ratings.items(), key=lambda kv: kv[1], reverse=True)]
 

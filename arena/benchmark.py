@@ -12,6 +12,7 @@ gaming one axis is visible in the breakdown.
 
 from __future__ import annotations
 
+import random
 from dataclasses import dataclass, field
 from typing import Any, Callable
 
@@ -28,6 +29,19 @@ STANDARD_SUITE: dict[str, list[int]] = {
     "T2": list(range(0, 20)),
     "T3": list(range(0, 20)),
 }
+
+
+def bootstrap_ci(values: list[float], *, n_boot: int = 1000, alpha: float = 0.05,
+                 seed: int = 0) -> list[float]:
+    """Deterministic percentile-bootstrap CI for the mean of ``values``."""
+    if not values:
+        return [0.0, 0.0]
+    rng = random.Random(seed)
+    n = len(values)
+    means = sorted(sum(values[rng.randrange(n)] for _ in range(n)) / n for _ in range(n_boot))
+    lo = means[int((alpha / 2) * n_boot)]
+    hi = means[min(n_boot - 1, int((1 - alpha / 2) * n_boot))]
+    return [round(lo, 4), round(hi, 4)]
 
 
 @dataclass
@@ -59,10 +73,14 @@ def run_benchmark(entry: BenchmarkEntry, suite: dict[str, list[int]] | None = No
     avail: list[float] = []
     faith: list[float] = []
     winrates: list[float] = []
+    per_match_scalar: list[float] = []
+    per_match_win: list[float] = []
 
     for tier, seeds in suite.items():
         report = run_batch(tier, seeds, entry.challenger_factory, entry.warden_factory,
                            workers=workers)
+        per_match_scalar.extend(c.warden_scalar for c in report.cards)
+        per_match_win.extend(1.0 if c.winner == "warden" else 0.0 for c in report.cards)
         per_tier[tier] = {
             "win_rates": report.win_rates,
             "warden_scalar": report.aggregates["warden.scalar"],
@@ -88,6 +106,9 @@ def run_benchmark(entry: BenchmarkEntry, suite: dict[str, list[int]] | None = No
         "availability": mean(avail),
         "faithfulness": mean(faith),
         "warden_winrate": mean(winrates),
+        "warden_scalar_ci95": bootstrap_ci(per_match_scalar),
+        "warden_winrate_ci95": bootstrap_ci(per_match_win),
+        "n_matches": len(per_match_scalar),
     }
     manifest = {
         "arena_version": __version__,
@@ -108,6 +129,7 @@ def leaderboard(entries: list[BenchmarkEntry], suite: dict[str, list[int]] | Non
     return {
         "ranking": [
             {"entry": r.entry, "warden_scalar": r.overall["warden_scalar"],
+             "warden_scalar_ci95": r.overall["warden_scalar_ci95"],
              "winrate": r.overall["warden_winrate"],
              "f1": r.overall["classification_f1"],
              "availability": r.overall["availability"],
@@ -119,9 +141,10 @@ def leaderboard(entries: list[BenchmarkEntry], suite: dict[str, list[int]] | Non
 
 
 def default_entries() -> list[BenchmarkEntry]:
-    from .agents import PassiveWarden, IsolateAllWarden, DeclareAllWarden
+    from .agents import AdaptiveWarden, PassiveWarden, IsolateAllWarden, DeclareAllWarden
     return [
         BenchmarkEntry("rule", lambda: RuleChallenger(), lambda: RuleWarden()),
+        BenchmarkEntry("adaptive", lambda: RuleChallenger(), lambda: AdaptiveWarden()),
         BenchmarkEntry("passive", lambda: RuleChallenger(), lambda: PassiveWarden()),
         BenchmarkEntry("isolate_all", lambda: RuleChallenger(), lambda: IsolateAllWarden()),
         BenchmarkEntry("declare_all", lambda: RuleChallenger(), lambda: DeclareAllWarden()),

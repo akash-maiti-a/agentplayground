@@ -118,6 +118,27 @@ def _cmd_benchmark(args) -> int:
     return 0
 
 
+def _cmd_export(args) -> int:
+    import datetime
+    import pathlib
+    import time
+    from .export import build_results
+    t0 = time.time()
+    stamp = args.generated_at or datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    res = build_results(eval_seeds=_parse_seeds(args.seeds), workers=args.workers,
+                        episodes=args.episodes, league_rounds=args.rounds,
+                        generated_at=stamp, quick=args.quick)
+    out = pathlib.Path(args.out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(res, indent=1, sort_keys=False), encoding="utf-8")
+    rows = res["leaderboard"]["rows"]
+    for r in sorted(rows, key=lambda r: -r["scalar"]):
+        print(f"  {r['warden']:<12} vs {r['challenger']:<8} scalar={r['scalar']:.3f} "
+              f"{r['scalar_ci95']} winrate={r['winrate']:.3f} f1={r['axes']['classification_f1']:.3f}")
+    print(f"wrote {out} in {time.time() - t0:.0f}s")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="arena", description="ARENA cyber-defense sparring range")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -159,6 +180,16 @@ def main(argv: list[str] | None = None) -> int:
     pbm = sub.add_parser("benchmark", help="run the standard benchmark leaderboard")
     pbm.add_argument("--workers", type=int, default=1)
     pbm.set_defaults(func=_cmd_benchmark)
+
+    pe = sub.add_parser("export", help="run the full v1-vs-v2 experiment and write results JSON for the site")
+    pe.add_argument("--out", default="site/public/data/results.json")
+    pe.add_argument("--seeds", default="100-149", help="held-out evaluation seeds (per tier)")
+    pe.add_argument("--episodes", type=int, default=800, help="RL training budget per learner")
+    pe.add_argument("--rounds", type=int, default=5, help="league rounds")
+    pe.add_argument("--workers", type=int, default=4)
+    pe.add_argument("--generated-at", default=None, help="override the timestamp (for reproducible diffs)")
+    pe.add_argument("--quick", action="store_true", help="skip the RL ablation")
+    pe.set_defaults(func=_cmd_export)
 
     args = p.parse_args(argv)
     return args.func(args)

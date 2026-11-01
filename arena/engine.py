@@ -120,6 +120,7 @@ class Engine:
                 node.restoring_ticks -= 1
                 if node.restoring_ticks <= 0:
                     node.status = NodeStatus.HEALTHY
+                    node.contained_foothold = False
                     node.privilege = "user"
                     node.held_credentials.clear()
                     self._log_res(out, Side.WARDEN, "RESTORE", True,
@@ -304,6 +305,7 @@ class Engine:
         if verb == "ISOLATE":
             node = self.w.nodes.get(a["node"])
             if node and node.status != NodeStatus.ISOLATED:
+                node.contained_foothold = node.contained_foothold or node.compromised()
                 node.status = NodeStatus.ISOLATED
                 self._log_res(out, Side.WARDEN, verb, True, {"node": a["node"]})
             else:
@@ -388,7 +390,9 @@ class Engine:
         if not node:
             self._log_res(out, Side.WARDEN, "DECLARE", False, {"node": nid, "reason": "unknown"})
             return
-        truth = "compromised" if node.compromised() else "benign"
+        # Before v0.2 this used compromised(), so declaring a node *after*
+        # isolating it was judged wrong and earned no detection credit (MTTD).
+        truth = "compromised" if node.truly_compromised() else "benign"
         correct = (verdict == truth) or (verdict == "suspicious" and truth == "compromised")
         self._log_res(out, Side.WARDEN, "DECLARE", True,
                       {"node": nid, "verdict": verdict, "truth": truth, "correct": correct})

@@ -153,7 +153,9 @@ def score_match(log: MatchLog) -> ScoreCard:
 
     # --- warden metrics ----------------------------------------------------
     mttd = (first_correct_declare - first_malicious) if (first_correct_declare is not None and first_malicious is not None) else None
-    mttc = (first_isolate - first_correct_declare) if (first_isolate is not None and first_correct_declare is not None and first_isolate >= first_correct_declare) else None
+    # Containment that precedes the formal verdict is zero-latency, not "never"
+    # (v0.1 returned None here, scoring isolate-then-declare as the worst MTTC).
+    mttc = max(0, first_isolate - first_correct_declare) if (first_isolate is not None and first_correct_declare is not None) else None
 
     tp = len(declared_compromised & ever_compromised)
     fp = len(declared_compromised - ever_compromised)

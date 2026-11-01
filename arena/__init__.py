@@ -17,4 +17,4 @@ there is nothing that could be reused to compromise a real system.
 See the project plan and README for the full design.
 """
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
