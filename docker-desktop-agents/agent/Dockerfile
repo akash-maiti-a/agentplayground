@@ -1,5 +1,6 @@
 # Full Linux desktop + VNC + noVNC, bundled by the base image's supervisord.
-FROM dorowu/ubuntu-desktop-lxde-vnc:latest
+# Pinned by digest (this was :latest; the image hasn't changed since 2021-04).
+FROM dorowu/ubuntu-desktop-lxde-vnc:latest@sha256:775184eaa5bbc01bc4261a6c9596a642b3b43a433c1508637567bc724575964b
 
 # Models baked in at build time: once pulled, the container needs zero
 # internet access at runtime — agent.py only ever calls its own 127.0.0.1.

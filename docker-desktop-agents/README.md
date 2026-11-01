@@ -35,11 +35,19 @@ gain access to the *other* "computer"'s machines:
   `nc`, `ping`, `ip` installed, reachable through the agent's `run_shell`
   action (see below) — real recon and access attempts, not GUI-clicking a
   terminal.
-- **Everything stays inside this compose project.** No internet access, no
-  real-world target, nothing outside the four containers this file defines.
+- **Everything stays inside this compose project, enforced.** All three
+  agent networks are `internal: true`, so an agent's shell commands have no
+  route to the internet or your LAN (verified: outbound requests by name and
+  by raw IP fail, while agent-to-agent traffic works). The `viewer` service
+  is the single gateway: it proxies every desktop and live view and is the
+  only container also on an outside-facing network.
+- **Host exposure is localhost-only.** Every published port (hub, noVNC,
+  live views, Dozzle) is bound to `127.0.0.1`, so nothing is reachable from
+  other machines on your network. `VNC_PASSWORD` has no default; set it in
+  `.env` (Compose refuses to start without it).
 
 Watch it happen via the live-view pages (http://localhost:7901-7904) or
-Dozzle (http://localhost:9999) — see "Observability" below. Want a neutral,
+Dozzle (http://localhost:9100) — see "Observability" below. Want a neutral,
 non-adversarial task instead (e.g. to just compare models head-to-head)?
 Set `SHARED_TASK` in `.env`.
 
@@ -73,7 +81,7 @@ See `SYSTEM_PROMPT` in `agent/agent.py` for the exact contract.
 
 ## Observability
 
-- **http://localhost:9999** — Dozzle, live aggregated logs for all 5
+- **http://localhost:9100** — Dozzle, live aggregated logs for all 5
   containers in one browser tab, including each agent's own reasoning
   (`agent.py` logs to stdout, not just a file, specifically so this works).
 - **http://localhost:7901-7904** — per-agent live view: latest screenshot,
@@ -103,7 +111,7 @@ required; add one yourself if you have it (see note at the bottom).
 
 ```bash
 cd docker-desktop-agents
-cp .env.example .env     # defaults work out of the box; tune models/tasks if you like
+cp .env.example .env     # then set VNC_PASSWORD (required, no default)
 docker compose up --build
 ```
 
@@ -114,7 +122,7 @@ take a couple of hours. Subsequent builds (code-only changes) are seconds,
 since they reuse the cached model layer.
 
 Then open http://localhost:8080 for the full link list, or jump straight to
-a live view (http://localhost:7901) or Dozzle (http://localhost:9999).
+a live view (http://localhost:7901) or Dozzle (http://localhost:9100).
 
 ## Making it an actually fair comparison
 

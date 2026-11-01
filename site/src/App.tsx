@@ -5,10 +5,10 @@ import {
 import Replay from "./Replay";
 import { AGENT_COLOR, AgentMeta, Results, Row, fmt, pct } from "./types";
 
-/** Measured on the pre-fix commit (7ecdf6c) — these runs cannot be regenerated
+/** Measured on the pre-fix commit (c208e34) — these runs cannot be regenerated
  *  from the fixed code, so they are recorded here with their provenance. */
 const PRE_FIX = {
-  commit: "7ecdf6c",
+  commit: "c208e34",
   rlWinrateByHashSeed: [
     { seed: "unset (first run)", winrate: 0.15 },
     { seed: "1", winrate: 0.5 },

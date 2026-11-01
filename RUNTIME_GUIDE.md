@@ -172,7 +172,7 @@ docker compose up --build
 
 This brings up six containers: `computer1-agent1`, `computer1-agent2`,
 `computer2-agent1`, `computer2-agent2` (the four desktop/agent containers),
-`viewer` (nginx link page on :8080), and `logs` (Dozzle on :9999).
+`viewer` (nginx link page on :8080), and `logs` (Dozzle on :9100).
 
 ### 3. Confirm it's up
 
@@ -272,7 +272,7 @@ keeps rebuilds fast.
 | --- | --- | --- |
 | `python -m arena` fails with `ModuleNotFoundError: arena` | Package not installed | `pip install -e .` from the repo root |
 | `pytest` fails on the zero-egress test | A new import added a networking/process-spawning module | Check `tests/test_safety.py` for which import triggered it; remove the dependency or move it behind the LLM-agent seam |
-| Agent idles immediately, desktop still loads | Ollama failed to come up (model failed to pull at build time) | Check Dozzle (`http://localhost:9999`) for that container's `ollama serve` logs; rebuild with `docker compose build <service>` |
+| Agent idles immediately, desktop still loads | Ollama failed to come up (model failed to pull at build time) | Check Dozzle (`http://localhost:9100`) for that container's `ollama serve` logs; rebuild with `docker compose build <service>` |
 | `docker compose up --build` hangs for a very long time | First-time model pull (two ~7B models per unique name) | Expected on first build; subsequent builds are fast. Confirm progress in the build output, not silence |
 | Agents never reach each other | `lab-net` missing or a firewall blocking Docker's internal bridge | Confirm `docker network inspect docker-desktop-agents_lab-net` lists all four agent containers |
 | Live view / noVNC pages time out | Container not yet healthy, or model still loading | `docker compose ps` to check status; give it another minute after `up` completes — Ollama model load can lag container start |
