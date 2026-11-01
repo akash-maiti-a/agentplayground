@@ -165,3 +165,38 @@ class RuleChallenger:
 
     def _i(self, verb: str, args: dict, why: str) -> Intent:
         return Intent(side=Side.CHALLENGER, verb=verb, args=args, rationale=why)
+
+
+class StealthChallenger(RuleChallenger):
+    """A low-and-slow variant of the rule Challenger.
+
+    Same priority ladder, but after every *loud* intent (ACCESS / ESCALATE /
+    TRAVERSE / OBJECTIVE) it goes quiet for ``cooldown`` ticks so the Warden's
+    decaying suspicion has time to bleed off, and it only spends AP on access
+    attempts once it has banked enough to chain the follow-up immediately.
+    It exists to stress detection that relies on suspicion *accumulating*
+    rather than on individual alerts. Still purely abstract intents.
+    """
+
+    _LOUD = {"ACCESS", "ESCALATE", "TRAVERSE", "OBJECTIVE"}
+
+    def __init__(self, side: Side = Side.CHALLENGER, seed: int = 0, cooldown: int = 3) -> None:
+        super().__init__(side, seed)
+        self.cooldown = cooldown
+        self._quiet = 0
+
+    def reset(self) -> None:
+        super().reset()
+        self._quiet = 0
+
+    def observe(self, obs: dict, ap_remaining: int) -> Intent:
+        if self._quiet > 0:
+            self._quiet -= 1
+            return self._i(NOOP, {}, "lie low")
+        intent = super().observe(obs, ap_remaining)
+        if intent.verb in self._LOUD:
+            # wait until we can afford this move plus a follow-up escalation
+            if intent.verb != "OBJECTIVE" and ap_remaining < AP_COST[intent.verb] + 2:
+                return self._i(NOOP, {}, "bank AP before a loud move")
+            self._quiet = self.cooldown
+        return intent

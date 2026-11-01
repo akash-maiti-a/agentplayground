@@ -53,7 +53,7 @@ class MatchResult:
 
 def _build_challenger_obs(w: World) -> dict:
     nodes: dict[str, dict] = {}
-    for nid in w.discovered_nodes:
+    for nid in sorted(w.discovered_nodes):
         node = w.nodes.get(nid)
         if not node:
             continue
@@ -67,7 +67,7 @@ def _build_challenger_obs(w: World) -> dict:
     }
     public_services: dict[str, list[str]] = {}
     services_known: dict[str, float] = {}
-    for nid in w.discovered_nodes:
+    for nid in sorted(w.discovered_nodes):
         node = w.nodes.get(nid)
         if not node:
             continue

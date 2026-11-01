@@ -151,14 +151,48 @@ makes the scalar reward-hacking resistant, and it is enforced as a test
 (`tests/test_reward_hacking.py`): the balanced rule Warden must out-score every
 degenerate baseline (`passive`, `isolate_all`, `declare_all`). If a scoring
 change ever lets a degenerate strategy win, that test fails — the "adversarial
-scoring review" tripwire from the plan. Current leaderboard:
+scoring review" tripwire from the plan. Current leaderboard
+(`python -m arena benchmark`, T1–T3 × 20 seeds, v0.2, with bootstrap 95% CIs):
 
 ```
-rule         scalar≈0.64  winrate≈0.86  f1≈0.46  avail≈0.95  faith≈0.93
-declare_all  scalar≈0.51  winrate≈0.31  f1≈0.74  avail≈1.00  faith≈0.13
-isolate_all  scalar≈0.35  winrate≈1.00  f1≈0.03  avail≈0.46  faith≈1.00
-passive      scalar≈0.33  winrate≈0.31  f1≈0.00  avail≈1.00  faith≈1.00
+adaptive     scalar≈0.89 [0.85,0.93]  winrate≈0.85  f1≈0.99  avail≈0.94  faith≈0.98
+rule         scalar≈0.78 [0.72,0.84]  winrate≈0.82  f1≈0.47  avail≈0.95  faith≈0.93
+declare_all  scalar≈0.51 [0.46,0.57]  winrate≈0.32  f1≈0.71  avail≈1.00  faith≈0.13
+isolate_all  scalar≈0.35 [0.34,0.37]  winrate≈1.00  f1≈0.03  avail≈0.46  faith≈1.00
+passive      scalar≈0.34 [0.29,0.39]  winrate≈0.32  f1≈0.00  avail≈1.00  faith≈1.00
 ```
+
+## v0.2 experiment & results site
+
+`python -m arena export --out site/public/data/results.json` runs the full
+v1-vs-v2 experiment (7 Wardens × 2 Challengers × tiers T0–T3 × 50 held-out
+seeds, a co-evolution league, RL learning curves and an ablation, and a replay
+of one match) into one JSON file. `site/` is a Vite + React page that renders
+it; `.github/workflows/pages.yml` deploys it to GitHub Pages
+(`cd site && npm ci && npm run dev` to view locally).
+
+What changed in v0.2, and why:
+
+* **Cross-process determinism bug (fixed).** `match.py` iterated a `set` of
+  node ids when building observations, so results depended on
+  `PYTHONHASHSEED`. The v0.1 RL experiment swung from 15% to 90% Warden win
+  rate on hash seed alone. Now sorted, and `tests/test_improvements.py` checks
+  identical output across three hash seeds in separate processes.
+* **Engine/scorer ground-truth fix.** Declaring a host *after* isolating it
+  was judged wrong (the engine only counted active footholds), and
+  containment before the verdict scored as "never contained". Nodes now carry
+  `contained_foothold`, and MTTC is `max(0, …)`.
+* **`AdaptiveWarden`** (`agents/warden.py`): fidelity-aware decision
+  threshold, alert triage, idle-AP threat hunting, calibrated claims.
+  Optional decoys measured no effect and are off by default.
+* **`StealthChallenger`** (`agents/challenger.py`): lies low after loud moves;
+  drops the rule Warden's win rate sharply.
+* **RL v2** (`rl.py`, `version="v2"`): target-aware macro decoding,
+  calibrated features, epsilon decay, train/eval opponent parity, learning
+  curves.
+* **Benchmark CIs** (`benchmark.bootstrap_ci`) and `league.extended_pools()`.
+  Caveat surfaced by the league: Elo is win/loss only, so `isolate_all` rates
+  highest there. Rank agents by the multi-objective score, not win-only Elo.
 
 ## Tests
 

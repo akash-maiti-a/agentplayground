@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "arena-cyber-range"
-version = "0.1.0"
+version = "0.2.0"
 description = "ARENA — a sandboxed, fully-abstract cyber-defense sparring range for AI agents (research/education)."
 readme = "README.md"
 requires-python = ">=3.11"

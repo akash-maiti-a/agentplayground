@@ -7,8 +7,8 @@ never execute anything — the engine owns all outcomes.
 """
 
 from .base import Agent
-from .challenger import RuleChallenger
-from .warden import RuleWarden
+from .challenger import RuleChallenger, StealthChallenger
+from .warden import RuleWarden, AdaptiveWarden
 from .scripted import ScriptedAgent
 from .llm import LLMAgent, DeterministicBackend
 from .baselines import (
@@ -16,7 +16,7 @@ from .baselines import (
 )
 
 __all__ = [
-    "Agent", "RuleChallenger", "RuleWarden", "ScriptedAgent",
+    "Agent", "RuleChallenger", "StealthChallenger", "RuleWarden", "AdaptiveWarden", "ScriptedAgent",
     "LLMAgent", "DeterministicBackend",
     "PassiveWarden", "IsolateAllWarden", "DeclareAllWarden", "NullChallenger",
 ]

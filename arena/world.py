@@ -62,12 +62,19 @@ class Node:
     telemetry_fidelity: float = 0.5  # 0..1 observability to the warden
     status: NodeStatus = NodeStatus.HEALTHY
     is_decoy: bool = False          # warden-placed deception
+    # ground truth survives containment: an isolated foothold is still a
+    # compromised host until it is restored (matches scoring's timeline)
+    contained_foothold: bool = False
     # engine bookkeeping for multi-tick actions (ticks remaining)
     restoring_ticks: int = 0
     patching: dict[str, int] = field(default_factory=dict)  # service -> ticks
 
     def compromised(self) -> bool:
         return self.status == NodeStatus.FOOTHOLD
+
+    def truly_compromised(self) -> bool:
+        """Ground truth for verdicts: an active *or contained* foothold."""
+        return self.compromised() or self.contained_foothold
 
 
 @dataclass

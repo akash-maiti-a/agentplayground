@@ -1,0 +1,7080 @@
+{
+ "manifest": {
+  "arena_version": "0.2.0",
+  "generated_at": "2026-11-01T01:27:49Z",
+  "tiers": [
+   "T0",
+   "T1",
+   "T2",
+   "T3"
+  ],
+  "eval_seeds": [
+   100,
+   149,
+   50
+  ],
+  "train_seeds": [
+   0,
+   29,
+   30
+  ],
+  "rl_episodes": 800,
+  "league": {
+   "tier": "T2",
+   "seeds": 8,
+   "rounds": 5
+  },
+  "command": "python -m arena export --out site/public/data/results.json"
+ },
+ "wardens": [
+  {
+   "key": "rule",
+   "label": "Rule Warden",
+   "generation": "v1",
+   "description": "Original priority-ladder baseline (fixed 0.6 confidence bar)."
+  },
+  {
+   "key": "adaptive",
+   "label": "Adaptive Warden",
+   "generation": "v2",
+   "description": "Fidelity-aware threshold, alert triage, idle-AP threat hunting, calibrated claims."
+  },
+  {
+   "key": "q_v1",
+   "label": "Q-Warden v1",
+   "generation": "v1",
+   "description": "Tabular Q-learning, original 6 features and top-suspect decoder."
+  },
+  {
+   "key": "q_v2",
+   "label": "Q-Warden v2",
+   "generation": "v2",
+   "description": "Tabular Q-learning, target-aware decoder, calibrated features, epsilon decay."
+  },
+  {
+   "key": "passive",
+   "label": "Passive",
+   "generation": "baseline",
+   "description": "Degenerate: never acts."
+  },
+  {
+   "key": "isolate_all",
+   "label": "Isolate-all",
+   "generation": "baseline",
+   "description": "Degenerate: isolates everything."
+  },
+  {
+   "key": "declare_all",
+   "label": "Declare-all",
+   "generation": "baseline",
+   "description": "Degenerate: declares everything compromised."
+  }
+ ],
+ "challengers": [
+  {
+   "key": "rule",
+   "label": "Rule Challenger",
+   "description": "Original priority-ladder challenge generator."
+  },
+  {
+   "key": "stealth",
+   "label": "Stealth Challenger",
+   "description": "Low-and-slow: lies low after loud moves so suspicion decays."
+  }
+ ],
+ "leaderboard": {
+  "rows": [
+   {
+    "warden": "rule",
+    "challenger": "rule",
+    "n": 200,
+    "scalar": 0.7718,
+    "scalar_ci95": [
+     0.7347,
+     0.8082
+    ],
+    "winrate": 0.81,
+    "winrate_ci95": [
+     0.75,
+     0.865
+    ],
+    "faithfulness": 0.915,
+    "axes": {
+     "mission_success": 0.8091,
+     "mttd_score": 0.5913,
+     "mttc_score": 0.7286,
+     "classification_f1": 0.552,
+     "availability": 0.9438,
+     "containment_quality": 0.81,
+     "false_alarm_score": 1.0
+    },
+    "per_tier": {
+     "T0": {
+      "scalar": 0.8609,
+      "scalar_ci95": [
+       0.8263,
+       0.8897
+      ],
+      "winrate": 1.0,
+      "f1": 0.76,
+      "availability": 0.9139,
+      "challenger_scalar": 0.4655
+     },
+     "T1": {
+      "scalar": 0.8654,
+      "scalar_ci95": [
+       0.8115,
+       0.9147
+      ],
+      "winrate": 0.9,
+      "f1": 0.7015,
+      "availability": 0.924,
+      "challenger_scalar": 0.5084
+     },
+     "T2": {
+      "scalar": 0.8825,
+      "scalar_ci95": [
+       0.838,
+       0.917
+      ],
+      "winrate": 0.94,
+      "f1": 0.6094,
+      "availability": 0.9461,
+      "challenger_scalar": 0.4907
+     },
+     "T3": {
+      "scalar": 0.4783,
+      "scalar_ci95": [
+       0.404,
+       0.5613
+      ],
+      "winrate": 0.4,
+      "f1": 0.137,
+      "availability": 0.9913,
+      "challenger_scalar": 0.7931
+     }
+    }
+   },
+   {
+    "warden": "rule",
+    "challenger": "stealth",
+    "n": 200,
+    "scalar": 0.6689,
+    "scalar_ci95": [
+     0.6318,
+     0.7074
+    ],
+    "winrate": 0.66,
+    "winrate_ci95": [
+     0.595,
+     0.72
+    ],
+    "faithfulness": 0.8686,
+    "axes": {
+     "mission_success": 0.66,
+     "mttd_score": 0.3811,
+     "mttc_score": 0.6414,
+     "classification_f1": 0.4785,
+     "availability": 0.9828,
+     "containment_quality": 0.66,
+     "false_alarm_score": 1.0
+    },
+    "per_tier": {
+     "T0": {
+      "scalar": 0.8318,
+      "scalar_ci95": [
+       0.7962,
+       0.8661
+      ],
+      "winrate": 1.0,
+      "f1": 0.6733,
+      "availability": 0.9739,
+      "challenger_scalar": 0.5093
+     },
+     "T1": {
+      "scalar": 0.6221,
+      "scalar_ci95": [
+       0.5445,
+       0.6928
+      ],
+      "winrate": 0.44,
+      "f1": 0.5759,
+      "availability": 0.9747,
+      "challenger_scalar": 0.74
+     },
+     "T2": {
+      "scalar": 0.7735,
+      "scalar_ci95": [
+       0.6992,
+       0.8322
+      ],
+      "winrate": 0.76,
+      "f1": 0.5748,
+      "availability": 0.9839,
+      "challenger_scalar": 0.6492
+     },
+     "T3": {
+      "scalar": 0.4484,
+      "scalar_ci95": [
+       0.376,
+       0.5216
+      ],
+      "winrate": 0.44,
+      "f1": 0.0901,
+      "availability": 0.9988,
+      "challenger_scalar": 0.8215
+     }
+    }
+   },
+   {
+    "warden": "adaptive",
+    "challenger": "rule",
+    "n": 200,
+    "scalar": 0.9064,
+    "scalar_ci95": [
+     0.8882,
+     0.9221
+    ],
+    "winrate": 0.91,
+    "winrate_ci95": [
+     0.865,
+     0.95
+    ],
+    "faithfulness": 0.9863,
+    "axes": {
+     "mission_success": 0.9097,
+     "mttd_score": 0.5582,
+     "mttc_score": 1.0,
+     "classification_f1": 0.9879,
+     "availability": 0.9149,
+     "containment_quality": 0.9076,
+     "false_alarm_score": 0.9998
+    },
+    "per_tier": {
+     "T0": {
+      "scalar": 0.9294,
+      "scalar_ci95": [
+       0.9253,
+       0.9341
+      ],
+      "winrate": 1.0,
+      "f1": 1.0,
+      "availability": 0.8613,
+      "challenger_scalar": 0.4175
+     },
+     "T1": {
+      "scalar": 0.9421,
+      "scalar_ci95": [
+       0.9358,
+       0.9488
+      ],
+      "winrate": 1.0,
+      "f1": 1.0,
+      "availability": 0.9017,
+      "challenger_scalar": 0.459
+     },
+     "T2": {
+      "scalar": 0.9413,
+      "scalar_ci95": [
+       0.9205,
+       0.9548
+      ],
+      "winrate": 0.98,
+      "f1": 0.9967,
+      "availability": 0.9368,
+      "challenger_scalar": 0.4867
+     },
+     "T3": {
+      "scalar": 0.8128,
+      "scalar_ci95": [
+       0.7472,
+       0.8686
+      ],
+      "winrate": 0.66,
+      "f1": 0.9548,
+      "availability": 0.96,
+      "challenger_scalar": 0.6802
+     }
+    }
+   },
+   {
+    "warden": "adaptive",
+    "challenger": "stealth",
+    "n": 200,
+    "scalar": 0.9081,
+    "scalar_ci95": [
+     0.8984,
+     0.9171
+    ],
+    "winrate": 0.965,
+    "winrate_ci95": [
+     0.94,
+     0.99
+    ],
+    "faithfulness": 0.9822,
+    "axes": {
+     "mission_success": 0.965,
+     "mttd_score": 0.3058,
+     "mttc_score": 1.0,
+     "classification_f1": 0.9913,
+     "availability": 0.9473,
+     "containment_quality": 0.9585,
+     "false_alarm_score": 0.9994
+    },
+    "per_tier": {
+     "T0": {
+      "scalar": 0.9179,
+      "scalar_ci95": [
+       0.9152,
+       0.9207
+      ],
+      "winrate": 1.0,
+      "f1": 1.0,
+      "availability": 0.9069,
+      "challenger_scalar": 0.4109
+     },
+     "T1": {
+      "scalar": 0.9094,
+      "scalar_ci95": [
+       0.8872,
+       0.9265
+      ],
+      "winrate": 0.96,
+      "f1": 1.0,
+      "availability": 0.9416,
+      "challenger_scalar": 0.4809
+     },
+     "T2": {
+      "scalar": 0.9176,
+      "scalar_ci95": [
+       0.8994,
+       0.9285
+      ],
+      "winrate": 0.98,
+      "f1": 1.0,
+      "availability": 0.9672,
+      "challenger_scalar": 0.5344
+     },
+     "T3": {
+      "scalar": 0.8873,
+      "scalar_ci95": [
+       0.8576,
+       0.9137
+      ],
+      "winrate": 0.92,
+      "f1": 0.9651,
+      "availability": 0.9736,
+      "challenger_scalar": 0.6028
+     }
+    }
+   },
+   {
+    "warden": "q_v1",
+    "challenger": "rule",
+    "n": 200,
+    "scalar": 0.6293,
+    "scalar_ci95": [
+     0.5942,
+     0.6646
+    ],
+    "winrate": 0.48,
+    "winrate_ci95": [
+     0.41,
+     0.55
+    ],
+    "faithfulness": 0.7392,
+    "axes": {
+     "mission_success": 0.4793,
+     "mttd_score": 0.7823,
+     "mttc_score": 0.2674,
+     "classification_f1": 0.794,
+     "availability": 0.9548,
+     "containment_quality": 0.4728,
+     "false_alarm_score": 0.992
+    },
+    "per_tier": {
+     "T0": {
+      "scalar": 0.907,
+      "scalar_ci95": [
+       0.8836,
+       0.9268
+      ],
+      "winrate": 1.0,
+      "f1": 0.8875,
+      "availability": 0.863,
+      "challenger_scalar": 0.4463
+     },
+     "T1": {
+      "scalar": 0.5529,
+      "scalar_ci95": [
+       0.4933,
+       0.6205
+      ],
+      "winrate": 0.28,
+      "f1": 0.8559,
+      "availability": 0.9652,
+      "challenger_scalar": 0.7771
+     },
+     "T2": {
+      "scalar": 0.5285,
+      "scalar_ci95": [
+       0.468,
+       0.589
+      ],
+      "winrate": 0.28,
+      "f1": 0.7826,
+      "availability": 0.9908,
+      "challenger_scalar": 0.8092
+     },
+     "T3": {
+      "scalar": 0.529,
+      "scalar_ci95": [
+       0.4649,
+       0.5985
+      ],
+      "winrate": 0.36,
+      "f1": 0.6498,
+      "availability": 1.0,
+      "challenger_scalar": 0.8194
+     }
+    }
+   },
+   {
+    "warden": "q_v1",
+    "challenger": "stealth",
+    "n": 200,
+    "scalar": 0.642,
+    "scalar_ci95": [
+     0.6122,
+     0.6735
+    ],
+    "winrate": 0.59,
+    "winrate_ci95": [
+     0.525,
+     0.655
+    ],
+    "faithfulness": 0.7626,
+    "axes": {
+     "mission_success": 0.5883,
+     "mttd_score": 0.6558,
+     "mttc_score": 0.2478,
+     "classification_f1": 0.6956,
+     "availability": 0.9571,
+     "containment_quality": 0.552,
+     "false_alarm_score": 0.9834
+    },
+    "per_tier": {
+     "T0": {
+      "scalar": 0.8474,
+      "scalar_ci95": [
+       0.8186,
+       0.8739
+      ],
+      "winrate": 1.0,
+      "f1": 0.7828,
+      "availability": 0.9092,
+      "challenger_scalar": 0.45
+     },
+     "T1": {
+      "scalar": 0.5447,
+      "scalar_ci95": [
+       0.4923,
+       0.5985
+      ],
+      "winrate": 0.34,
+      "f1": 0.802,
+      "availability": 0.967,
+      "challenger_scalar": 0.7674
+     },
+     "T2": {
+      "scalar": 0.6068,
+      "scalar_ci95": [
+       0.5443,
+       0.6668
+      ],
+      "winrate": 0.52,
+      "f1": 0.6367,
+      "availability": 0.9758,
+      "challenger_scalar": 0.7573
+     },
+     "T3": {
+      "scalar": 0.569,
+      "scalar_ci95": [
+       0.5106,
+       0.637
+      ],
+      "winrate": 0.5,
+      "f1": 0.561,
+      "availability": 0.9763,
+      "challenger_scalar": 0.8133
+     }
+    }
+   },
+   {
+    "warden": "q_v2",
+    "challenger": "rule",
+    "n": 200,
+    "scalar": 0.7093,
+    "scalar_ci95": [
+     0.6682,
+     0.7553
+    ],
+    "winrate": 0.68,
+    "winrate_ci95": [
+     0.62,
+     0.75
+    ],
+    "faithfulness": 0.9926,
+    "axes": {
+     "mission_success": 0.675,
+     "mttd_score": 0.4591,
+     "mttc_score": 0.7021,
+     "classification_f1": 0.642,
+     "availability": 0.9198,
+     "containment_quality": 0.6797,
+     "false_alarm_score": 1.0
+    },
+    "per_tier": {
+     "T0": {
+      "scalar": 0.9139,
+      "scalar_ci95": [
+       0.9098,
+       0.9182
+      ],
+      "winrate": 1.0,
+      "f1": 0.9467,
+      "availability": 0.9044,
+      "challenger_scalar": 0.4667
+     },
+     "T1": {
+      "scalar": 0.6381,
+      "scalar_ci95": [
+       0.5486,
+       0.7416
+      ],
+      "winrate": 0.56,
+      "f1": 0.6086,
+      "availability": 0.9045,
+      "challenger_scalar": 0.6532
+     },
+     "T2": {
+      "scalar": 0.7308,
+      "scalar_ci95": [
+       0.637,
+       0.8133
+      ],
+      "winrate": 0.68,
+      "f1": 0.6765,
+      "availability": 0.9273,
+      "challenger_scalar": 0.6043
+     },
+     "T3": {
+      "scalar": 0.5544,
+      "scalar_ci95": [
+       0.4504,
+       0.6569
+      ],
+      "winrate": 0.48,
+      "f1": 0.3364,
+      "availability": 0.9432,
+      "challenger_scalar": 0.75
+     }
+    }
+   },
+   {
+    "warden": "q_v2",
+    "challenger": "stealth",
+    "n": 200,
+    "scalar": 0.8838,
+    "scalar_ci95": [
+     0.865,
+     0.9002
+    ],
+    "winrate": 0.945,
+    "winrate_ci95": [
+     0.91,
+     0.975
+    ],
+    "faithfulness": 0.9886,
+    "axes": {
+     "mission_success": 0.944,
+     "mttd_score": 0.5128,
+     "mttc_score": 0.9733,
+     "classification_f1": 0.776,
+     "availability": 0.9338,
+     "containment_quality": 0.9445,
+     "false_alarm_score": 1.0
+    },
+    "per_tier": {
+     "T0": {
+      "scalar": 0.9085,
+      "scalar_ci95": [
+       0.9064,
+       0.9112
+      ],
+      "winrate": 1.0,
+      "f1": 0.92,
+      "availability": 0.9305,
+      "challenger_scalar": 0.5531
+     },
+     "T1": {
+      "scalar": 0.873,
+      "scalar_ci95": [
+       0.8329,
+       0.908
+      ],
+      "winrate": 0.92,
+      "f1": 0.7386,
+      "availability": 0.9066,
+      "challenger_scalar": 0.5978
+     },
+     "T2": {
+      "scalar": 0.8913,
+      "scalar_ci95": [
+       0.8463,
+       0.9249
+      ],
+      "winrate": 0.94,
+      "f1": 0.7775,
+      "availability": 0.9463,
+      "challenger_scalar": 0.5988
+     },
+     "T3": {
+      "scalar": 0.8625,
+      "scalar_ci95": [
+       0.8115,
+       0.9016
+      ],
+      "winrate": 0.92,
+      "f1": 0.668,
+      "availability": 0.9517,
+      "challenger_scalar": 0.6615
+     }
+    }
+   },
+   {
+    "warden": "passive",
+    "challenger": "rule",
+    "n": 200,
+    "scalar": 0.372,
+    "scalar_ci95": [
+     0.3462,
+     0.3999
+    ],
+    "winrate": 0.4,
+    "winrate_ci95": [
+     0.34,
+     0.465
+    ],
+    "faithfulness": 1.0,
+    "axes": {
+     "mission_success": 0.4,
+     "mttd_score": 0.0,
+     "mttc_score": 0.0,
+     "classification_f1": 0.0,
+     "availability": 1.0,
+     "containment_quality": 0.4,
+     "false_alarm_score": 1.0
+    },
+    "per_tier": {
+     "T0": {
+      "scalar": 0.63,
+      "scalar_ci95": [
+       0.63,
+       0.63
+      ],
+      "winrate": 1.0,
+      "f1": 0.0,
+      "availability": 1.0,
+      "challenger_scalar": 0.5346
+     },
+     "T1": {
+      "scalar": 0.2,
+      "scalar_ci95": [
+       0.2,
+       0.2
+      ],
+      "winrate": 0.0,
+      "f1": 0.0,
+      "availability": 1.0,
+      "challenger_scalar": 0.9081
+     },
+     "T2": {
+      "scalar": 0.3032,
+      "scalar_ci95": [
+       0.2516,
+       0.3634
+      ],
+      "winrate": 0.24,
+      "f1": 0.0,
+      "availability": 1.0,
+      "challenger_scalar": 0.8316
+     },
+     "T3": {
+      "scalar": 0.3548,
+      "scalar_ci95": [
+       0.2946,
+       0.415
+      ],
+      "winrate": 0.36,
+      "f1": 0.0,
+      "availability": 1.0,
+      "challenger_scalar": 0.8194
+     }
+    }
+   },
+   {
+    "warden": "passive",
+    "challenger": "stealth",
+    "n": 200,
+    "scalar": 0.3913,
+    "scalar_ci95": [
+     0.3655,
+     0.4193
+    ],
+    "winrate": 0.445,
+    "winrate_ci95": [
+     0.385,
+     0.51
+    ],
+    "faithfulness": 1.0,
+    "axes": {
+     "mission_success": 0.445,
+     "mttd_score": 0.0,
+     "mttc_score": 0.0,
+     "classification_f1": 0.0,
+     "availability": 1.0,
+     "containment_quality": 0.445,
+     "false_alarm_score": 1.0
+    },
+    "per_tier": {
+     "T0": {
+      "scalar": 0.63,
+      "scalar_ci95": [
+       0.63,
+       0.63
+      ],
+      "winrate": 1.0,
+      "f1": 0.0,
+      "availability": 1.0,
+      "challenger_scalar": 0.547
+     },
+     "T1": {
+      "scalar": 0.2258,
+      "scalar_ci95": [
+       0.2,
+       0.2602
+      ],
+      "winrate": 0.06,
+      "f1": 0.0,
+      "availability": 1.0,
+      "challenger_scalar": 0.8993
+     },
+     "T2": {
+      "scalar": 0.329,
+      "scalar_ci95": [
+       0.2688,
+       0.3806
+      ],
+      "winrate": 0.3,
+      "f1": 0.0,
+      "availability": 1.0,
+      "challenger_scalar": 0.8342
+     },
+     "T3": {
+      "scalar": 0.3806,
+      "scalar_ci95": [
+       0.3204,
+       0.4494
+      ],
+      "winrate": 0.42,
+      "f1": 0.0,
+      "availability": 1.0,
+      "challenger_scalar": 0.8363
+     }
+    }
+   },
+   {
+    "warden": "isolate_all",
+    "challenger": "rule",
+    "n": 200,
+    "scalar": 0.3256,
+    "scalar_ci95": [
+     0.3164,
+     0.3344
+    ],
+    "winrate": 1.0,
+    "winrate_ci95": [
+     1.0,
+     1.0
+    ],
+    "faithfulness": 1.0,
+    "axes": {
+     "mission_success": 0.4122,
+     "mttd_score": 0.0,
+     "mttc_score": 0.0,
+     "classification_f1": 0.245,
+     "availability": 0.3294,
+     "containment_quality": 0.5,
+     "false_alarm_score": 0.6726
+    },
+    "per_tier": {
+     "T0": {
+      "scalar": 0.2666,
+      "scalar_ci95": [
+       0.248,
+       0.2849
+      ],
+      "winrate": 1.0,
+      "f1": 0.72,
+      "availability": 0.0245,
+      "challenger_scalar": 0.2275
+     },
+     "T1": {
+      "scalar": 0.2901,
+      "scalar_ci95": [
+       0.2785,
+       0.3014
+      ],
+      "winrate": 1.0,
+      "f1": 0.18,
+      "availability": 0.3203,
+      "challenger_scalar": 0.4238
+     },
+     "T2": {
+      "scalar": 0.3696,
+      "scalar_ci95": [
+       0.3625,
+       0.3776
+      ],
+      "winrate": 1.0,
+      "f1": 0.04,
+      "availability": 0.4837,
+      "challenger_scalar": 0.491
+     },
+     "T3": {
+      "scalar": 0.3761,
+      "scalar_ci95": [
+       0.3689,
+       0.3839
+      ],
+      "winrate": 1.0,
+      "f1": 0.04,
+      "availability": 0.4889,
+      "challenger_scalar": 0.5363
+     }
+    }
+   },
+   {
+    "warden": "isolate_all",
+    "challenger": "stealth",
+    "n": 200,
+    "scalar": 0.3247,
+    "scalar_ci95": [
+     0.3161,
+     0.3328
+    ],
+    "winrate": 1.0,
+    "winrate_ci95": [
+     1.0,
+     1.0
+    ],
+    "faithfulness": 1.0,
+    "axes": {
+     "mission_success": 0.3113,
+     "mttd_score": 0.0,
+     "mttc_score": 0.0,
+     "classification_f1": 0.445,
+     "availability": 0.2486,
+     "containment_quality": 0.5,
+     "false_alarm_score": 0.7472
+    },
+    "per_tier": {
+     "T0": {
+      "scalar": 0.2814,
+      "scalar_ci95": [
+       0.265,
+       0.2967
+      ],
+      "winrate": 1.0,
+      "f1": 0.82,
+      "availability": 0.0245,
+      "challenger_scalar": 0.2227
+     },
+     "T1": {
+      "scalar": 0.2939,
+      "scalar_ci95": [
+       0.2806,
+       0.3067
+      ],
+      "winrate": 1.0,
+      "f1": 0.42,
+      "availability": 0.2143,
+      "challenger_scalar": 0.3543
+     },
+     "T2": {
+      "scalar": 0.3595,
+      "scalar_ci95": [
+       0.3483,
+       0.3703
+      ],
+      "winrate": 1.0,
+      "f1": 0.26,
+      "availability": 0.3806,
+      "challenger_scalar": 0.478
+     },
+     "T3": {
+      "scalar": 0.3641,
+      "scalar_ci95": [
+       0.3522,
+       0.3747
+      ],
+      "winrate": 1.0,
+      "f1": 0.28,
+      "availability": 0.375,
+      "challenger_scalar": 0.5064
+     }
+    }
+   },
+   {
+    "warden": "declare_all",
+    "challenger": "rule",
+    "n": 200,
+    "scalar": 0.5236,
+    "scalar_ci95": [
+     0.4974,
+     0.5504
+    ],
+    "winrate": 0.4,
+    "winrate_ci95": [
+     0.34,
+     0.465
+    ],
+    "faithfulness": 0.112,
+    "axes": {
+     "mission_success": 0.4,
+     "mttd_score": 0.5932,
+     "mttc_score": 0.0,
+     "classification_f1": 0.6629,
+     "availability": 1.0,
+     "containment_quality": 0.4,
+     "false_alarm_score": 0.9283
+    },
+    "per_tier": {
+     "T0": {
+      "scalar": 0.7316,
+      "scalar_ci95": [
+       0.7186,
+       0.7446
+      ],
+      "winrate": 1.0,
+      "f1": 0.5342,
+      "availability": 1.0,
+      "challenger_scalar": 0.5346
+     },
+     "T1": {
+      "scalar": 0.3792,
+      "scalar_ci95": [
+       0.3686,
+       0.3913
+      ],
+      "winrate": 0.0,
+      "f1": 0.8124,
+      "availability": 1.0,
+      "challenger_scalar": 0.9081
+     },
+     "T2": {
+      "scalar": 0.4663,
+      "scalar_ci95": [
+       0.4113,
+       0.5258
+      ],
+      "winrate": 0.24,
+      "f1": 0.6633,
+      "availability": 1.0,
+      "challenger_scalar": 0.8316
+     },
+     "T3": {
+      "scalar": 0.5172,
+      "scalar_ci95": [
+       0.4543,
+       0.5895
+      ],
+      "winrate": 0.36,
+      "f1": 0.6417,
+      "availability": 1.0,
+      "challenger_scalar": 0.8194
+     }
+    }
+   },
+   {
+    "warden": "declare_all",
+    "challenger": "stealth",
+    "n": 200,
+    "scalar": 0.5382,
+    "scalar_ci95": [
+     0.512,
+     0.5662
+    ],
+    "winrate": 0.445,
+    "winrate_ci95": [
+     0.385,
+     0.51
+    ],
+    "faithfulness": 0.0757,
+    "axes": {
+     "mission_success": 0.445,
+     "mttd_score": 0.5136,
+     "mttc_score": 0.0,
+     "classification_f1": 0.6591,
+     "availability": 1.0,
+     "containment_quality": 0.445,
+     "false_alarm_score": 0.9662
+    },
+    "per_tier": {
+     "T0": {
+      "scalar": 0.7218,
+      "scalar_ci95": [
+       0.7116,
+       0.7329
+      ],
+      "winrate": 1.0,
+      "f1": 0.5342,
+      "availability": 1.0,
+      "challenger_scalar": 0.547
+     },
+     "T1": {
+      "scalar": 0.3997,
+      "scalar_ci95": [
+       0.3686,
+       0.437
+      ],
+      "winrate": 0.06,
+      "f1": 0.8124,
+      "availability": 1.0,
+      "challenger_scalar": 0.8993
+     },
+     "T2": {
+      "scalar": 0.4928,
+      "scalar_ci95": [
+       0.432,
+       0.552
+      ],
+      "winrate": 0.3,
+      "f1": 0.658,
+      "availability": 1.0,
+      "challenger_scalar": 0.8342
+     },
+     "T3": {
+      "scalar": 0.5386,
+      "scalar_ci95": [
+       0.4729,
+       0.6093
+      ],
+      "winrate": 0.42,
+      "f1": 0.6319,
+      "availability": 1.0,
+      "challenger_scalar": 0.8363
+     }
+    }
+   }
+  ]
+ },
+ "league": {
+  "rounds": 5,
+  "seeds": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7
+  ],
+  "warden_ratings": {
+   "rule": 1227.7,
+   "passive": 923.4,
+   "isolate_all": 1539.6,
+   "declare_all": 921.1,
+   "adaptive": 1475.5,
+   "q_v1": 1064.8,
+   "q_v2": 1468.8
+  },
+  "challenger_ratings": {
+   "rule": 1150.7,
+   "stealth": 1028.4
+  },
+  "win_matrix": {
+   "rule": {
+    "rule": 0.75,
+    "stealth": 0.625
+   },
+   "passive": {
+    "rule": 0.25,
+    "stealth": 0.25
+   },
+   "isolate_all": {
+    "rule": 1.0,
+    "stealth": 1.0
+   },
+   "declare_all": {
+    "rule": 0.25,
+    "stealth": 0.25
+   },
+   "adaptive": {
+    "rule": 0.875,
+    "stealth": 1.0
+   },
+   "q_v1": {
+    "rule": 0.25,
+    "stealth": 0.625
+   },
+   "q_v2": {
+    "rule": 0.875,
+    "stealth": 1.0
+   }
+  },
+  "rank_volatility": 0.2,
+  "dynamic": "dominance",
+  "rating_history": [
+   {
+    "warden": {
+     "rule": 1247.8481235564484,
+     "passive": 1114.2385246342856,
+     "isolate_all": 1344.2188300192176,
+     "declare_all": 1102.9609314383263,
+     "adaptive": 1321.7647870997437,
+     "q_v1": 1156.4721858079436,
+     "q_v2": 1307.1205035206128
+    },
+    "challenger": {
+     "rule": 1134.7955728609484,
+     "stealth": 1070.580541062474
+    }
+   },
+   {
+    "warden": {
+     "rule": 1241.5137804797275,
+     "passive": 1033.191331993553,
+     "isolate_all": 1417.65059092268,
+     "declare_all": 1027.9235152899028,
+     "adaptive": 1385.786357562417,
+     "q_v1": 1121.4522487990164,
+     "q_v2": 1371.8483013287394
+    },
+    "challenger": {
+     "rule": 1148.0325210930293,
+     "stealth": 1052.601352530935
+    }
+   },
+   {
+    "warden": {
+     "rule": 1236.2577900514889,
+     "passive": 981.2930587422612,
+     "isolate_all": 1469.060964192974,
+     "declare_all": 978.4626136819329,
+     "adaptive": 1426.825136778944,
+     "q_v1": 1096.6408894395222,
+     "q_v2": 1415.360849800911
+    },
+    "challenger": {
+     "rule": 1152.569818002616,
+     "stealth": 1043.5288793093498
+    }
+   },
+   {
+    "warden": {
+     "rule": 1231.9491241477651,
+     "passive": 947.1346227857464,
+     "isolate_all": 1508.2247931284085,
+     "declare_all": 944.8832281977907,
+     "adaptive": 1455.1203841580234,
+     "q_v1": 1078.5092302967146,
+     "q_v2": 1446.1534435493193
+    },
+    "challenger": {
+     "rule": 1152.4575388739795,
+     "stealth": 1035.5676348622533
+    }
+   },
+   {
+    "warden": {
+     "rule": 1227.705510835083,
+     "passive": 923.4357080423512,
+     "isolate_all": 1539.5946797191596,
+     "declare_all": 921.134754619224,
+     "adaptive": 1475.5141375963087,
+     "q_v1": 1064.7866696357262,
+     "q_v2": 1468.7582822040774
+    },
+    "challenger": {
+     "rule": 1150.6824781471423,
+     "stealth": 1028.387779200929
+    }
+   }
+  ]
+ },
+ "rl": {
+  "curves": {
+   "v1": {
+    "return": [
+     5.5,
+     14.7,
+     19.8814,
+     19.0718,
+     23.3215,
+     28.5476,
+     30.34,
+     35.0437,
+     35.3717,
+     36.6784,
+     39.1258,
+     41.5533,
+     41.8916,
+     48.0291,
+     49.6378,
+     46.8995,
+     46.2795,
+     40.6445,
+     39.7623,
+     39.259,
+     39.4327,
+     37.2802,
+     38.6114,
+     33.6389,
+     34.3744,
+     37.4505,
+     39.0453,
+     44.3775,
+     44.1931,
+     45.7786,
+     47.3641,
+     51.0625,
+     54.6942,
+     61.8569,
+     64.877,
+     64.6452,
+     64.5962,
+     65.872,
+     70.7454,
+     74.3236,
+     76.4356,
+     74.031,
+     71.0386,
+     64.6851,
+     59.8183,
+     60.3053,
+     62.2464,
+     62.9288,
+     62.5688,
+     57.7346,
+     56.1438,
+     60.4875,
+     59.5687,
+     57.7196,
+     56.117,
+     57.8466,
+     57.4796,
+     55.4058,
+     52.109,
+     50.3579,
+     47.5158,
+     42.6991,
+     41.7924,
+     42.8425,
+     43.8712,
+     38.8645,
+     37.607,
+     35.6529,
+     36.2802,
+     34.4827,
+     31.5127,
+     32.5794,
+     34.8739,
+     35.1472,
+     32.3877,
+     33.3155,
+     33.3041,
+     32.0227,
+     32.5434,
+     37.1605,
+     37.7014,
+     39.9468,
+     40.5451,
+     43.4162,
+     47.3434,
+     50.595,
+     48.8576,
+     52.2276,
+     58.852,
+     62.2406,
+     68.4269,
+     69.8537,
+     71.6467,
+     70.3839,
+     75.8506,
+     79.9896,
+     86.4654,
+     88.7798,
+     81.4293,
+     77.964,
+     74.4281,
+     72.9185,
+     68.4243,
+     65.2426,
+     58.5446,
+     53.0953,
+     48.8634,
+     41.8046,
+     41.8825,
+     43.4271,
+     45.3075,
+     43.9333,
+     43.4083,
+     44.2636,
+     45.9623,
+     44.9224,
+     40.7349,
+     42.7532,
+     40.2431,
+     33.6297,
+     27.9313,
+     27.5521,
+     28.4717,
+     26.4563,
+     28.2518,
+     32.3571,
+     38.335,
+     38.1658,
+     42.6596,
+     48.3423,
+     52.0805,
+     55.45,
+     56.3391,
+     65.7661,
+     64.5483,
+     62.6728,
+     58.5207,
+     63.2855,
+     69.9494,
+     72.0756,
+     74.3193,
+     73.8627,
+     76.6337,
+     72.0459,
+     68.9945,
+     70.6881,
+     77.64,
+     77.9157,
+     70.9298,
+     66.9177,
+     65.6831,
+     63.1485,
+     63.9214,
+     60.8339,
+     62.8439,
+     59.023,
+     57.1078,
+     55.4557,
+     55.5441,
+     58.7979,
+     58.7841,
+     57.745,
+     52.9716,
+     58.6645,
+     60.449,
+     57.6674,
+     56.2532,
+     59.4157,
+     60.171,
+     56.9627,
+     58.7834,
+     61.3643,
+     63.713,
+     58.7393,
+     55.5239,
+     57.0,
+     55.5296,
+     49.1732,
+     48.823,
+     47.9313,
+     43.4074,
+     42.0251,
+     44.4303,
+     48.0584,
+     52.7015,
+     52.7122,
+     50.3655,
+     52.4913,
+     50.8049,
+     55.5344,
+     60.5835,
+     64.3775,
+     60.3011,
+     64.2605,
+     63.085,
+     73.4882,
+     78.1214,
+     81.6719,
+     82.9369,
+     87.8648
+    ],
+    "winrate": [
+     1.0,
+     0.4,
+     0.5556,
+     0.6154,
+     0.6471,
+     0.619,
+     0.6,
+     0.5862,
+     0.5758,
+     0.5676,
+     0.55,
+     0.6,
+     0.6,
+     0.525,
+     0.475,
+     0.45,
+     0.425,
+     0.45,
+     0.45,
+     0.45,
+     0.4,
+     0.325,
+     0.275,
+     0.35,
+     0.375,
+     0.375,
+     0.375,
+     0.325,
+     0.35,
+     0.3,
+     0.3,
+     0.35,
+     0.35,
+     0.275,
+     0.25,
+     0.25,
+     0.25,
+     0.225,
+     0.15,
+     0.15,
+     0.15,
+     0.125,
+     0.125,
+     0.2,
+     0.225,
+     0.225,
+     0.225,
+     0.25,
+     0.25,
+     0.275,
+     0.3,
+     0.3,
+     0.35,
+     0.35,
+     0.375,
+     0.375,
+     0.375,
+     0.4,
+     0.45,
+     0.475,
+     0.5,
+     0.55,
+     0.55,
+     0.475,
+     0.425,
+     0.425,
+     0.425,
+     0.425,
+     0.425,
+     0.425,
+     0.375,
+     0.325,
+     0.25,
+     0.3,
+     0.3,
+     0.275,
+     0.275,
+     0.3,
+     0.275,
+     0.275,
+     0.325,
+     0.35,
+     0.375,
+     0.325,
+     0.35,
+     0.4,
+     0.425,
+     0.375,
+     0.35,
+     0.325,
+     0.3,
+     0.25,
+     0.25,
+     0.275,
+     0.225,
+     0.2,
+     0.15,
+     0.15,
+     0.175,
+     0.175,
+     0.2,
+     0.25,
+     0.3,
+     0.375,
+     0.475,
+     0.5,
+     0.55,
+     0.6,
+     0.625,
+     0.65,
+     0.65,
+     0.675,
+     0.7,
+     0.6,
+     0.525,
+     0.525,
+     0.475,
+     0.45,
+     0.45,
+     0.475,
+     0.475,
+     0.4,
+     0.3,
+     0.325,
+     0.325,
+     0.275,
+     0.3,
+     0.3,
+     0.25,
+     0.225,
+     0.2,
+     0.225,
+     0.275,
+     0.275,
+     0.3,
+     0.325,
+     0.325,
+     0.3,
+     0.3,
+     0.275,
+     0.275,
+     0.25,
+     0.2,
+     0.2,
+     0.225,
+     0.2,
+     0.175,
+     0.175,
+     0.175,
+     0.175,
+     0.2,
+     0.275,
+     0.3,
+     0.375,
+     0.375,
+     0.45,
+     0.45,
+     0.45,
+     0.5,
+     0.525,
+     0.525,
+     0.525,
+     0.6,
+     0.5,
+     0.425,
+     0.375,
+     0.4,
+     0.4,
+     0.35,
+     0.3,
+     0.275,
+     0.2,
+     0.1,
+     0.125,
+     0.15,
+     0.175,
+     0.175,
+     0.2,
+     0.2,
+     0.25,
+     0.3,
+     0.325,
+     0.35,
+     0.325,
+     0.325,
+     0.35,
+     0.35,
+     0.35,
+     0.375,
+     0.35,
+     0.3,
+     0.275,
+     0.3,
+     0.3,
+     0.275,
+     0.2,
+     0.2,
+     0.15,
+     0.125,
+     0.1
+    ],
+    "episodes": 800,
+    "states": 512,
+    "stride": 4
+   },
+   "v2": {
+    "return": [
+     6.5,
+     5.5,
+     5.837,
+     6.0025,
+     6.1509,
+     6.4428,
+     6.4919,
+     6.5493,
+     6.604,
+     6.6288,
+     6.6599,
+     6.8191,
+     6.8524,
+     7.0715,
+     7.1852,
+     7.171,
+     7.2718,
+     7.0943,
+     7.1396,
+     7.1596,
+     7.2223,
+     7.414,
+     7.6852,
+     7.3853,
+     7.4058,
+     7.4555,
+     7.0694,
+     7.238,
+     7.0147,
+     7.2982,
+     7.6692,
+     7.7064,
+     7.978,
+     8.2064,
+     8.7331,
+     8.7771,
+     8.8656,
+     9.1531,
+     9.6107,
+     9.8748,
+     9.9737,
+     9.3369,
+     9.1316,
+     9.0707,
+     8.4074,
+     8.5307,
+     8.9695,
+     8.8941,
+     8.7311,
+     7.6701,
+     7.3755,
+     7.7993,
+     7.4534,
+     7.3667,
+     7.3692,
+     7.1663,
+     6.9368,
+     6.6936,
+     6.6021,
+     7.0954,
+     6.8174,
+     6.7616,
+     6.7549,
+     6.9198,
+     7.071,
+     7.1569,
+     7.3702,
+     7.4727,
+     7.6501,
+     7.6851,
+     7.8485,
+     8.2802,
+     8.5414,
+     8.754,
+     8.722,
+     8.6467,
+     8.9637,
+     9.3015,
+     9.1502,
+     9.486,
+     9.5248,
+     9.4834,
+     9.639,
+     9.655,
+     9.7661,
+     9.8303,
+     9.2524,
+     9.3438,
+     9.6493,
+     9.6574,
+     9.8523,
+     9.1692,
+     8.6112,
+     8.591,
+     8.5138,
+     8.9874,
+     9.2994,
+     8.9884,
+     8.8721,
+     8.3324,
+     8.1548,
+     8.5285,
+     8.6764,
+     8.3031,
+     8.11,
+     7.5616,
+     7.2971,
+     7.1165,
+     6.7387,
+     6.8995,
+     6.6799,
+     6.5991,
+     6.5924,
+     6.8823,
+     7.061,
+     7.1218,
+     7.0727,
+     7.1852,
+     7.6804,
+     7.9429,
+     8.0885,
+     8.1911,
+     8.3398,
+     8.2399,
+     8.1329,
+     8.0826,
+     8.195,
+     8.3114,
+     8.125,
+     8.1764,
+     8.233,
+     8.4669,
+     8.6096,
+     8.8451,
+     9.5867,
+     9.6757,
+     9.5631,
+     9.5106,
+     9.6882,
+     9.245,
+     9.0165,
+     8.3567,
+     8.3919,
+     8.0157,
+     7.3524,
+     7.1532,
+     7.3615,
+     7.3286,
+     7.385,
+     7.316,
+     7.4493,
+     7.8536,
+     7.5336,
+     7.4844,
+     7.3994,
+     7.4589,
+     7.3375,
+     7.154,
+     6.7737,
+     6.972,
+     6.9049,
+     6.8641,
+     6.8974,
+     7.2706,
+     7.3468,
+     7.4477,
+     7.536,
+     7.5885,
+     7.5284,
+     7.7176,
+     7.797,
+     7.9762,
+     7.9974,
+     7.8391,
+     7.8196,
+     7.7943,
+     7.7014,
+     7.8609,
+     8.065,
+     8.2282,
+     8.2777,
+     8.2449,
+     8.5668,
+     8.7219,
+     9.065,
+     9.034,
+     9.007,
+     9.1754,
+     9.1379,
+     9.0945,
+     9.7465,
+     9.618,
+     9.5496,
+     9.3786,
+     9.0014,
+     9.699,
+     9.9268,
+     9.7213,
+     9.9726,
+     9.3141
+    ],
+    "winrate": [
+     1.0,
+     0.8,
+     0.8889,
+     0.9231,
+     0.9412,
+     0.9524,
+     0.96,
+     0.9655,
+     0.9697,
+     0.973,
+     0.975,
+     1.0,
+     1.0,
+     0.975,
+     0.95,
+     0.95,
+     0.95,
+     0.925,
+     0.9,
+     0.9,
+     0.9,
+     0.9,
+     0.9,
+     0.875,
+     0.9,
+     0.9,
+     0.825,
+     0.775,
+     0.725,
+     0.675,
+     0.65,
+     0.65,
+     0.6,
+     0.6,
+     0.6,
+     0.575,
+     0.625,
+     0.675,
+     0.7,
+     0.75,
+     0.75,
+     0.7,
+     0.7,
+     0.725,
+     0.7,
+     0.675,
+     0.65,
+     0.625,
+     0.625,
+     0.575,
+     0.575,
+     0.625,
+     0.675,
+     0.7,
+     0.725,
+     0.775,
+     0.825,
+     0.875,
+     0.925,
+     0.975,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     0.975,
+     0.975,
+     0.975,
+     0.95,
+     0.95,
+     0.95,
+     0.95,
+     0.95,
+     0.95,
+     0.95,
+     0.95,
+     0.95,
+     0.95,
+     0.95,
+     0.95,
+     0.95,
+     0.95,
+     0.95,
+     0.875,
+     0.875,
+     0.9,
+     0.9,
+     0.825,
+     0.8,
+     0.75,
+     0.75,
+     0.725,
+     0.725,
+     0.75,
+     0.725,
+     0.675,
+     0.625,
+     0.675,
+     0.725,
+     0.775,
+     0.775,
+     0.8,
+     0.8,
+     0.85,
+     0.875,
+     0.9,
+     0.95,
+     0.975,
+     0.975,
+     0.975,
+     0.975,
+     0.975,
+     0.975,
+     0.95,
+     0.95,
+     0.975,
+     0.975,
+     0.975,
+     0.975,
+     0.975,
+     0.975,
+     0.975,
+     0.975,
+     0.975,
+     0.975,
+     0.95,
+     0.95,
+     0.95,
+     0.95,
+     0.95,
+     0.95,
+     0.95,
+     0.95,
+     0.95,
+     0.925,
+     0.925,
+     0.875,
+     0.8,
+     0.75,
+     0.75,
+     0.725,
+     0.725,
+     0.65,
+     0.65,
+     0.65,
+     0.65,
+     0.6,
+     0.65,
+     0.7,
+     0.7,
+     0.725,
+     0.725,
+     0.8,
+     0.825,
+     0.85,
+     0.875,
+     0.975,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     0.975,
+     0.975,
+     0.975,
+     0.975,
+     0.975,
+     0.95,
+     0.95,
+     0.95,
+     0.925,
+     0.925,
+     0.95,
+     0.95,
+     0.925,
+     0.925,
+     0.9,
+     0.9,
+     0.9,
+     0.875,
+     0.85,
+     0.8,
+     0.775,
+     0.7,
+     0.675,
+     0.65,
+     0.65,
+     0.65,
+     0.625,
+     0.6,
+     0.6
+    ],
+    "episodes": 800,
+    "states": 655,
+    "stride": 4
+   }
+  },
+  "ablation": [
+   {
+    "tier": "T2",
+    "version": "v1",
+    "episodes": 150,
+    "winrate": 0.2,
+    "scalar": 0.4849,
+    "f1": 0.7449,
+    "availability": 1.0
+   },
+   {
+    "tier": "T2",
+    "version": "v1",
+    "episodes": 400,
+    "winrate": 0.375,
+    "scalar": 0.4852,
+    "f1": 0.5042,
+    "availability": 0.9842
+   },
+   {
+    "tier": "T2",
+    "version": "v2",
+    "episodes": 150,
+    "winrate": 0.525,
+    "scalar": 0.5354,
+    "f1": 0.2743,
+    "availability": 0.9472
+   },
+   {
+    "tier": "T2",
+    "version": "v2",
+    "episodes": 400,
+    "winrate": 0.925,
+    "scalar": 0.9102,
+    "f1": 0.9118,
+    "availability": 0.9211
+   },
+   {
+    "tier": "T3",
+    "version": "v1",
+    "episodes": 150,
+    "winrate": 0.3,
+    "scalar": 0.5031,
+    "f1": 0.6326,
+    "availability": 0.9857
+   },
+   {
+    "tier": "T3",
+    "version": "v1",
+    "episodes": 400,
+    "winrate": 0.375,
+    "scalar": 0.4586,
+    "f1": 0.208,
+    "availability": 0.9471
+   },
+   {
+    "tier": "T3",
+    "version": "v2",
+    "episodes": 150,
+    "winrate": 0.85,
+    "scalar": 0.8773,
+    "f1": 0.8682,
+    "availability": 0.9357
+   },
+   {
+    "tier": "T3",
+    "version": "v2",
+    "episodes": 400,
+    "winrate": 1.0,
+    "scalar": 0.923,
+    "f1": 0.8839,
+    "availability": 0.925
+   }
+  ]
+ },
+ "action_mix": {
+  "rule": {
+   "DECLARE": 0.0074,
+   "HOLD": 0.7536,
+   "INVESTIGATE": 0.2205,
+   "ISOLATE": 0.0071,
+   "MONITOR": 0.0099,
+   "RESTORE": 0.0015
+  },
+  "adaptive": {
+   "DECLARE": 0.0484,
+   "HOLD": 0.0556,
+   "INVESTIGATE": 0.8186,
+   "ISOLATE": 0.0484,
+   "MONITOR": 0.0024,
+   "RESTORE": 0.0266
+  }
+ },
+ "replay": {
+  "tier": "T2",
+  "seed": 109,
+  "topology": {
+   "objective": "vault-kms",
+   "zones": [
+    "perimeter",
+    "commons",
+    "core",
+    "ops"
+   ],
+   "nodes": [
+    {
+     "id": "desk-00",
+     "zone": "commons",
+     "role": "workstation",
+     "value": 3,
+     "business": false
+    },
+    {
+     "id": "desk-01",
+     "zone": "commons",
+     "role": "workstation",
+     "value": 3,
+     "business": true
+    },
+    {
+     "id": "desk-02",
+     "zone": "commons",
+     "role": "workstation",
+     "value": 3,
+     "business": true
+    },
+    {
+     "id": "desk-03",
+     "zone": "commons",
+     "role": "workstation",
+     "value": 3,
+     "business": true
+    },
+    {
+     "id": "desk-04",
+     "zone": "commons",
+     "role": "workstation",
+     "value": 3,
+     "business": false
+    },
+    {
+     "id": "desk-05",
+     "zone": "commons",
+     "role": "workstation",
+     "value": 3,
+     "business": false
+    },
+    {
+     "id": "desk-06",
+     "zone": "commons",
+     "role": "workstation",
+     "value": 3,
+     "business": false
+    },
+    {
+     "id": "desk-07",
+     "zone": "commons",
+     "role": "workstation",
+     "value": 3,
+     "business": false
+    },
+    {
+     "id": "desk-08",
+     "zone": "commons",
+     "role": "workstation",
+     "value": 3,
+     "business": false
+    },
+    {
+     "id": "desk-09",
+     "zone": "commons",
+     "role": "workstation",
+     "value": 3,
+     "business": false
+    },
+    {
+     "id": "desk-10",
+     "zone": "commons",
+     "role": "workstation",
+     "value": 3,
+     "business": false
+    },
+    {
+     "id": "desk-11",
+     "zone": "commons",
+     "role": "workstation",
+     "value": 3,
+     "business": false
+    },
+    {
+     "id": "directory-svc",
+     "zone": "core",
+     "role": "asset",
+     "value": 8,
+     "business": true
+    },
+    {
+     "id": "forge",
+     "zone": "ops",
+     "role": "infra",
+     "value": 7,
+     "business": true
+    },
+    {
+     "id": "ledger-db",
+     "zone": "core",
+     "role": "asset",
+     "value": 10,
+     "business": true
+    },
+    {
+     "id": "relay-00",
+     "zone": "perimeter",
+     "role": "entry",
+     "value": 2,
+     "business": true
+    },
+    {
+     "id": "vault-kms",
+     "zone": "core",
+     "role": "asset",
+     "value": 10,
+     "business": true
+    },
+    {
+     "id": "watchtower",
+     "zone": "ops",
+     "role": "infra",
+     "value": 6,
+     "business": true
+    }
+   ],
+   "edges": [
+    [
+     "desk-00",
+     "desk-01"
+    ],
+    [
+     "desk-01",
+     "desk-02"
+    ],
+    [
+     "desk-02",
+     "desk-03"
+    ],
+    [
+     "desk-02",
+     "relay-00"
+    ],
+    [
+     "desk-03",
+     "desk-04"
+    ],
+    [
+     "desk-03",
+     "relay-00"
+    ],
+    [
+     "desk-04",
+     "desk-05"
+    ],
+    [
+     "desk-05",
+     "desk-06"
+    ],
+    [
+     "desk-06",
+     "desk-07"
+    ],
+    [
+     "desk-07",
+     "desk-08"
+    ],
+    [
+     "desk-07",
+     "vault-kms"
+    ],
+    [
+     "desk-08",
+     "desk-09"
+    ],
+    [
+     "desk-09",
+     "desk-10"
+    ],
+    [
+     "desk-10",
+     "desk-11"
+    ],
+    [
+     "desk-11",
+     "ledger-db"
+    ],
+    [
+     "directory-svc",
+     "ledger-db"
+    ],
+    [
+     "directory-svc",
+     "vault-kms"
+    ],
+    [
+     "forge",
+     "vault-kms"
+    ],
+    [
+     "forge",
+     "watchtower"
+    ],
+    [
+     "ledger-db",
+     "watchtower"
+    ]
+   ]
+  },
+  "runs": {
+   "rule": {
+    "warden": "RuleWarden",
+    "winner": "challenger",
+    "reason": "objective_reached",
+    "ticks": 195,
+    "scalar": 0.4324,
+    "f1": 0.1818,
+    "ever_compromised": [
+     "desk-00",
+     "desk-01",
+     "desk-02",
+     "desk-03",
+     "desk-04",
+     "desk-05",
+     "desk-06",
+     "desk-07",
+     "relay-00",
+     "vault-kms"
+    ],
+    "declared": [
+     "desk-04"
+    ],
+    "timeline": [
+     {
+      "t": 1,
+      "c": {
+       "verb": "PROBE",
+       "target": "relay-00",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {}
+     },
+     {
+      "t": 2,
+      "c": {
+       "verb": "ACCESS",
+       "target": "relay-00",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "relay-00": "foothold"
+      }
+     },
+     {
+      "t": 3,
+      "c": {
+       "verb": "ESCALATE",
+       "target": "relay-00",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "relay-00": "foothold"
+      }
+     },
+     {
+      "t": 4,
+      "c": {
+       "verb": "ESCALATE",
+       "target": "relay-00",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 5,
+      "c": {
+       "verb": "RECON",
+       "target": "commons",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 6,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-02",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 7,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-02",
+       "ok": true
+      },
+      "w": {
+       "verb": "MONITOR",
+       "target": "commons",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 0,
+      "avail": 1.0,
+      "nodes": {
+       "desk-02": "foothold",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 8,
+      "c": {
+       "verb": "ESCALATE",
+       "target": "desk-02",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-02": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 9,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-03",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-02": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 10,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-03",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-02": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 11,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-03",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 0,
+      "avail": 1.0,
+      "nodes": {
+       "desk-02": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 12,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-03",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 0,
+      "avail": 1.0,
+      "nodes": {
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 13,
+      "c": {
+       "verb": "ESCALATE",
+       "target": "desk-03",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 14,
+      "c": {
+       "verb": "RECON",
+       "target": "core",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 0,
+      "avail": 1.0,
+      "nodes": {
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 15,
+      "c": {
+       "verb": "RECON",
+       "target": "core",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 4,
+      "avail": 1.0,
+      "nodes": {
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 16,
+      "c": {
+       "verb": "RECON",
+       "target": "commons",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 7,
+      "avail": 1.0,
+      "nodes": {
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 17,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-01",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 18,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-01",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 19,
+      "c": {
+       "verb": "ESCALATE",
+       "target": "desk-01",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 20,
+      "c": {
+       "verb": "ESCALATE",
+       "target": "desk-01",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 21,
+      "c": {
+       "verb": "ESCALATE",
+       "target": "desk-01",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 22,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 23,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 24,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 25,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 26,
+      "c": {
+       "verb": "ESCALATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 27,
+      "c": {
+       "verb": "RECON",
+       "target": "core",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 28,
+      "c": {
+       "verb": "RECON",
+       "target": "core",
+       "ok": true
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 4,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 29,
+      "c": {
+       "verb": "RECON",
+       "target": "core",
+       "ok": true
+      },
+      "w": {
+       "verb": "ISOLATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 30,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "DECLARE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 31,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 32,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 33,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 34,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 35,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 36,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 37,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 5,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 38,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 39,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 40,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 41,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 42,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 43,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 44,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 45,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 46,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 47,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 48,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 49,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 8,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 50,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 0,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 51,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 0,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 52,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 4,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 53,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 54,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 6,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 55,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 56,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 57,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 58,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 4,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 59,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 60,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 61,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 62,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 63,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 64,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 0,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 65,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 4,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 66,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 0,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 67,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 68,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 69,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 4,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 70,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 71,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 72,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 4,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 73,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 6,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 74,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 75,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 76,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 77,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 78,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 4,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 79,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 5,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 80,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 0,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 81,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 82,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 4,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 83,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 84,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 85,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 86,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 0,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 87,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 4,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 88,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 89,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 90,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 91,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 92,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 93,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 94,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 95,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 96,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 97,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 4,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 98,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 99,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 100,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 4,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 101,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 102,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 103,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 5,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 104,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 105,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 106,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 107,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 108,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 8,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 109,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 110,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 6,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 111,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 112,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 113,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 5,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 114,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 115,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 0,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 116,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 117,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 4,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 118,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 119,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 0,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 120,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 5,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 121,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 122,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 123,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 124,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 7,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 125,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 126,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 127,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 128,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 129,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 130,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 131,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 6,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 132,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 133,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 4,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 134,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 135,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 0,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 136,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 137,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 4,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 138,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 0,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 139,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 140,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 0,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 141,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 142,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 4,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 143,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 4,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 144,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 145,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 146,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 5,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 147,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 5,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 148,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 6,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 149,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 150,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 151,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 0,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 152,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 153,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 4,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 154,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 155,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 5,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 156,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 157,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 158,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 159,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 160,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "isolated",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 161,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "RESTORE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "restoring",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 162,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 6,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "restoring",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 163,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "restoring",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 164,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 165,
+      "c": {
+       "verb": "ESCALATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 166,
+      "c": {
+       "verb": "RECON",
+       "target": "core",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 4,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 167,
+      "c": {
+       "verb": "RECON",
+       "target": "commons",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 168,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-00",
+       "ok": true
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-04",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 169,
+      "c": {
+       "verb": "ESCALATE",
+       "target": "desk-00",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 0,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 170,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-05",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 171,
+      "c": {
+       "verb": "ESCALATE",
+       "target": "desk-05",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 5,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 172,
+      "c": {
+       "verb": "ESCALATE",
+       "target": "desk-05",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 173,
+      "c": {
+       "verb": "RECON",
+       "target": "core",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 174,
+      "c": {
+       "verb": "RECON",
+       "target": "core",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 5,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 175,
+      "c": {
+       "verb": "RECON",
+       "target": "core",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 176,
+      "c": {
+       "verb": "RECON",
+       "target": "core",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 177,
+      "c": {
+       "verb": "RECON",
+       "target": "commons",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 178,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-06",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "desk-06": "foothold",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 179,
+      "c": {
+       "verb": "ESCALATE",
+       "target": "desk-06",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "desk-06": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 180,
+      "c": {
+       "verb": "RECON",
+       "target": "core",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "desk-06": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 181,
+      "c": {
+       "verb": "RECON",
+       "target": "core",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "desk-06": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 182,
+      "c": {
+       "verb": "RECON",
+       "target": "core",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "desk-06": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 183,
+      "c": {
+       "verb": "RECON",
+       "target": "core",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "desk-06": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 184,
+      "c": {
+       "verb": "RECON",
+       "target": "commons",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 0,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "desk-06": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 185,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-07",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 4,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "desk-06": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 186,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "desk-07",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "desk-06": "foothold+admin",
+       "desk-07": "foothold",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 187,
+      "c": {
+       "verb": "ESCALATE",
+       "target": "desk-07",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "desk-06": "foothold+admin",
+       "desk-07": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 188,
+      "c": {
+       "verb": "RECON",
+       "target": "core",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "desk-06": "foothold+admin",
+       "desk-07": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 189,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "vault-kms",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "desk-06": "foothold+admin",
+       "desk-07": "foothold+admin",
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 190,
+      "c": {
+       "verb": "TRAVERSE",
+       "target": "vault-kms",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 0,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "desk-06": "foothold+admin",
+       "desk-07": "foothold+admin",
+       "relay-00": "foothold+admin",
+       "vault-kms": "foothold"
+      }
+     },
+     {
+      "t": 191,
+      "c": {
+       "verb": "ESCALATE",
+       "target": "vault-kms",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "desk-06": "foothold+admin",
+       "desk-07": "foothold+admin",
+       "relay-00": "foothold+admin",
+       "vault-kms": "foothold"
+      }
+     },
+     {
+      "t": 192,
+      "c": {
+       "verb": "ESCALATE",
+       "target": "vault-kms",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "desk-06": "foothold+admin",
+       "desk-07": "foothold+admin",
+       "relay-00": "foothold+admin",
+       "vault-kms": "foothold"
+      }
+     },
+     {
+      "t": 193,
+      "c": {
+       "verb": "ESCALATE",
+       "target": "vault-kms",
+       "ok": false
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 4,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "desk-06": "foothold+admin",
+       "desk-07": "foothold+admin",
+       "relay-00": "foothold+admin",
+       "vault-kms": "foothold"
+      }
+     },
+     {
+      "t": 194,
+      "c": {
+       "verb": "ESCALATE",
+       "target": "vault-kms",
+       "ok": true
+      },
+      "w": {
+       "verb": "HOLD",
+       "target": null,
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 4,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "desk-06": "foothold+admin",
+       "desk-07": "foothold+admin",
+       "relay-00": "foothold+admin",
+       "vault-kms": "foothold+admin"
+      }
+     },
+     {
+      "t": 195,
+      "c": {
+       "verb": "OBJECTIVE",
+       "target": "vault-kms",
+       "ok": true
+      },
+      "w": {
+       "verb": "MONITOR",
+       "target": "core",
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 1,
+      "avail": 1.0,
+      "nodes": {
+       "desk-00": "foothold+admin",
+       "desk-01": "foothold+admin",
+       "desk-02": "foothold+admin",
+       "desk-03": "foothold+admin",
+       "desk-04": "foothold+admin",
+       "desk-05": "foothold+admin",
+       "desk-06": "foothold+admin",
+       "desk-07": "foothold+admin",
+       "relay-00": "foothold+admin",
+       "vault-kms": "foothold+admin"
+      }
+     }
+    ]
+   },
+   "adaptive": {
+    "warden": "AdaptiveWarden",
+    "winner": "warden",
+    "reason": "eviction_hold",
+    "ticks": 9,
+    "scalar": 0.9389,
+    "f1": 1.0,
+    "ever_compromised": [
+     "relay-00"
+    ],
+    "declared": [
+     "relay-00"
+    ],
+    "timeline": [
+     {
+      "t": 1,
+      "c": {
+       "verb": "PROBE",
+       "target": "relay-00",
+       "ok": true
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "ledger-db",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {}
+     },
+     {
+      "t": 2,
+      "c": {
+       "verb": "ACCESS",
+       "target": "relay-00",
+       "ok": true
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "vault-kms",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "relay-00": "foothold"
+      }
+     },
+     {
+      "t": 3,
+      "c": {
+       "verb": "ESCALATE",
+       "target": "relay-00",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "directory-svc",
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 2,
+      "avail": 1.0,
+      "nodes": {
+       "relay-00": "foothold"
+      }
+     },
+     {
+      "t": 4,
+      "c": {
+       "verb": "ESCALATE",
+       "target": "relay-00",
+       "ok": true
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "relay-00",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 3,
+      "avail": 1.0,
+      "nodes": {
+       "relay-00": "foothold+admin"
+      }
+     },
+     {
+      "t": 5,
+      "c": {
+       "verb": "RECON",
+       "target": "commons",
+       "ok": true
+      },
+      "w": {
+       "verb": "ISOLATE",
+       "target": "relay-00",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 0.9,
+      "nodes": {
+       "relay-00": "isolated"
+      }
+     },
+     {
+      "t": 6,
+      "c": {
+       "verb": "ACCESS",
+       "target": "relay-00",
+       "ok": false
+      },
+      "w": {
+       "verb": "DECLARE",
+       "target": "relay-00",
+       "ok": true
+      },
+      "alerts": 1,
+      "greens": 1,
+      "avail": 0.9,
+      "nodes": {
+       "relay-00": "isolated"
+      }
+     },
+     {
+      "t": 7,
+      "c": {
+       "verb": "ACCESS",
+       "target": "relay-00",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "forge",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 0,
+      "avail": 0.9,
+      "nodes": {
+       "relay-00": "isolated"
+      }
+     },
+     {
+      "t": 8,
+      "c": {
+       "verb": "ACCESS",
+       "target": "relay-00",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "watchtower",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 1,
+      "avail": 0.9,
+      "nodes": {
+       "relay-00": "isolated"
+      }
+     },
+     {
+      "t": 9,
+      "c": {
+       "verb": "ACCESS",
+       "target": "relay-00",
+       "ok": false
+      },
+      "w": {
+       "verb": "INVESTIGATE",
+       "target": "desk-00",
+       "ok": true
+      },
+      "alerts": 0,
+      "greens": 2,
+      "avail": 0.9,
+      "nodes": {
+       "relay-00": "isolated"
+      }
+     }
+    ]
+   }
+  }
+ }
+}
